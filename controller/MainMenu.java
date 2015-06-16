@@ -22,14 +22,35 @@ public class MainMenu implements Menu {
 
 	}
 		
-	 public void runMainProgram() {
-		 Menu mainMenu = new MainMenu();
+	 public void presentMenuToUser(Menu mainMenu) {
 		 MainMenuChoices mainMenuChoice;
 			do{
 				mainMenuChoice = getMainMenuUserChoice(mainMenu);
-				runUsersChoice(mainMenuChoice);
+				Menu usersChoice = getNewMenu(mainMenuChoice);
+				usersChoice.presentMenuToUser(usersChoice);
 			}while(userHasNotEnteredQuit(mainMenuChoice));
 	}
+
+	 private Menu getNewMenu(MainMenuChoices mainMenuChoice) {
+		 Menu newMenu;
+		 switch(mainMenuChoice){
+		 case SINGLE_TEAM_SENARIO: 
+			 newMenu = new SingleTeamMenu();
+			 break;
+		 case TWO_TEAM_SENARIO: 
+			 newMenu = new TwoTeamMenu();
+			 break;
+		 case MODIFY_TEAM: 
+			 newMenu = new ModifyTeamMenu();
+			 break;
+		 case CREATE_TEAM: 
+			 newMenu = new CreateTeamMenu();
+			 break;
+		 default:
+			 newMenu = new QuitMenu();
+		 }	
+		 return newMenu;
+	 }
 
 		private boolean userHasNotEnteredQuit(MainMenuChoices mainMenuChoice) {
 		return !(mainMenuChoice==MainMenuChoices.QUIT);

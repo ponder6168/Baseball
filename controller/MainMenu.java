@@ -66,8 +66,8 @@ public class MainMenu implements Menu {
 		}			
 
 	@Override
-	public String getMenuChoices() {
-		return menuChoices;
+	public void printMenuChoices() {
+		System.out.print(menuChoices);
 	}
 
 

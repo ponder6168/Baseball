@@ -2,7 +2,7 @@ package view;
 
 public interface   Menu {
 
-	String getMenuChoices();
+	void printMenuChoices();
 	int getNumberOfMenuChoices();
 
 }

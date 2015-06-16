@@ -11,7 +11,7 @@ public class Input {
 	
 	public int menuChoice(Menu menu){
 		do{
-			System.out.print(menu.getMenuChoices());
+			menu.printMenuChoices();
 			menuChoice = getInteger();
 		}while(menuChoiceIsInvalid(menu));
 		return menuChoice-1; //Adjust for zero index of array

@@ -4,6 +4,6 @@ public interface   Menu {
 
 	void printMenuChoices();
 	int getNumberOfMenuChoices();
-	void presentMenuToUser(Menu menu);
+	void presentMenuToUser();
 
 }

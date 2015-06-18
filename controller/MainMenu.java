@@ -6,7 +6,7 @@ import view.Menu;
 public class MainMenu implements Menu {
 	
 	private String menuChoices;
-	private int numberOfMenuChoices;
+	private static final int numberOfMenuChoices=5;
 	
 	enum MainMenuChoices  {SINGLE_TEAM_SENARIO, TWO_TEAM_SENARIO, MODIFY_TEAM, CREATE_TEAM, QUIT}
 	
@@ -18,18 +18,22 @@ public class MainMenu implements Menu {
 				"  3. Modify an Existing Team.",
 				"  4. Create a new Team.",
 				"  5. Exit the program.");
-		numberOfMenuChoices=5;
 
 	}
 		
-	 public void presentMenuToUser(Menu mainMenu) {
+	 public void presentMenuToUser() {
 		 MainMenuChoices mainMenuChoice;
 			do{
-				mainMenuChoice = getMainMenuUserChoice(mainMenu);
+				mainMenuChoice = getMainMenuUserChoice();
 				Menu usersChoice = getNewMenu(mainMenuChoice);
-				usersChoice.presentMenuToUser(usersChoice);
+				usersChoice.presentMenuToUser();
 			}while(userHasNotEnteredQuit(mainMenuChoice));
 	}
+	 
+		private MainMenuChoices getMainMenuUserChoice( ) {
+			int mainMenuUserChoice = new Input().menuChoice(this);
+			return MainMenuChoices.values()[mainMenuUserChoice];
+		}
 
 	 private Menu getNewMenu(MainMenuChoices mainMenuChoice) {
 		 Menu newMenu;
@@ -53,48 +57,16 @@ public class MainMenu implements Menu {
 	 }
 
 		private boolean userHasNotEnteredQuit(MainMenuChoices mainMenuChoice) {
-		return !(mainMenuChoice==MainMenuChoices.QUIT);
+		return mainMenuChoice!=MainMenuChoices.QUIT;
 	}
-
-		private MainMenuChoices getMainMenuUserChoice(Menu mainMenu) {
-			Input userChoice = new Input();
-			int mainMenuUserChoice = userChoice.menuChoice(mainMenu);
-			return MainMenuChoices.values()[mainMenuUserChoice];
-		}
-
-	private void runUsersChoice(MainMenuChoices mainMenuChoice) {
-			switch(mainMenuChoice){
-				case SINGLE_TEAM_SENARIO: 
-					SingleTeam singleTeam = new SingleTeam();
-					singleTeam.runSingleTeamMenu();
-					break;
-				case TWO_TEAM_SENARIO: 
-					TwoTeam twoTeam = new TwoTeam();
-					twoTeam.runTwoTeamMenu();
-					break;
-				case MODIFY_TEAM: 
-					TeamModifier teamModifier = new TeamModifier();
-					teamModifier.runModifyTeamMenu();
-					break;
-				case CREATE_TEAM: 
-					TeamCreator teamCreator = new TeamCreator();
-					teamCreator.runTeamCreatorMenu();
-					break;
-				case QUIT:
-					break;
-				default:
-			}	
-		}			
 
 	@Override
 	public void printMenuChoices() {
 		System.out.print(menuChoices);
 	}
 
-
 	@Override
 	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
 		return numberOfMenuChoices;
 	}
 }

@@ -17,7 +17,7 @@ public class SingleTeamMenu implements Menu {
 	}
 
 	@Override
-	public void presentMenuToUser(Menu menu) {
+	public void presentMenuToUser() {
 		System.out.println("Single Team menu stub");
 
 	}

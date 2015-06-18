@@ -8,7 +8,7 @@ public class Input {
 
 	private int INVALID_MENU_CHOICE = -1;
 	private int menuChoice;
-	
+
 	public int menuChoice(Menu menu){
 		do{
 			menu.printMenuChoices();
@@ -19,8 +19,9 @@ public class Input {
 
 	private boolean menuChoiceIsInvalid(Menu menu) {
 		boolean inValid =!(0<menuChoice && menuChoice<=menu.getNumberOfMenuChoices());
-		if (inValid)
+		if (inValid){
 			System.out.println("You did not enter an integer from 1 to "+menu.getNumberOfMenuChoices()+".");
+		}
 		return inValid;
 	}
 

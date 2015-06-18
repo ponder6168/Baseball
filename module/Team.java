@@ -225,6 +225,7 @@ public class Team implements Serializable{
 		@Override
 		//The players are numbered starting at 1 for output, but 0 in the array.
 		public String toString(){
+				String heading = String.format("%n%n%s%n%n", this.description);
 				String firstColumnHeadings = String.format("%s%n", "          At                                                      Stolen    Caught ");
 				String secondColumnHeadings = String.format("%s%n", "Player   Bats  Hits  Singles  Doubles  Triples  Home Runs  Walks  Bases    Stealing");
 				String playerValues = "";

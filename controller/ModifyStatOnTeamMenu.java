@@ -2,9 +2,7 @@ package controller;
 
 import view.Menu;
 
-public class QuitMenu implements Menu {
-	
-	//QuitMenu is returned when the user decides to leave a menu and does not do anything.
+public class ModifyStatOnTeamMenu implements Menu {
 
 	@Override
 	public void printMenuChoices() {
@@ -20,7 +18,7 @@ public class QuitMenu implements Menu {
 
 	@Override
 	public void presentMenuToUser() {
-		// TODO Auto-generated method stub
+		System.out.println("Modify Stat Stub");
 
 	}
 

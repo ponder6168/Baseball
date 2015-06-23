@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.Collections;
+
 import view.Input;
 import module.Team;
 import module.TeamTest;
@@ -23,6 +25,15 @@ public class ModifyTeamBattingOrderMenu implements ExecutesMenuWithParameter {
 	}
 
 
+
+	private void movePlayerToNewLocation(int indexOfPlayerToMove, int indexOfWhereToMovePlayerTo) {
+		if(indexOfWhereToMovePlayerTo>indexOfPlayerToMove){
+			Collections.rotate(teamToModify.getTeam().subList(indexOfPlayerToMove, indexOfWhereToMovePlayerTo+1), -1);
+		}else{
+			Collections.rotate(teamToModify.getTeam().subList(indexOfWhereToMovePlayerTo, indexOfPlayerToMove+1), 1);
+		}
+		
+	}
 
 	private void displayUpdatedTeamToModify() {
 		System.out.format("%n%s%n%n", "Here is the updated batting order.");

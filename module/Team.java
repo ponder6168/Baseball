@@ -261,12 +261,20 @@ public class Team implements Serializable{
 
 
 	public ArrayList<Player> getTeam() {
+		ArrayList<Player> team = new ArrayList<>();
+		int playerLocation=0;
+		for(Player player: this.team){
+			team.add(new Player(player));
+		}
 		return team;
 	}
 
 
 	public void setTeam(ArrayList<Player> team) {
-		this.team = team;
+		int playerLocation=0;
+		for(Player player: team){
+			this.team.set(playerLocation, new Player(player));
+		}
 	}
 
 	public Team(ArrayList<Player> team) {

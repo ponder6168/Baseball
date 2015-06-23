@@ -1,27 +1,16 @@
 package controller;
 
-import view.Menu;
 
-public class QuitMenu implements Menu {
+public class QuitMenu implements ExecutesMenu {
+
+	@Override
+	public void executeMenuChoice() {
+		//QuitMenu is returned when the user decides to leave a menu and does not do anything.
+	}
 	
-	//QuitMenu is returned when the user decides to leave a menu and does not do anything.
 
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void presentMenuToUser() {
-		// TODO Auto-generated method stub
-
+	public boolean equals(Object o){
+		return o.equals("QUIT");
 	}
 
 }

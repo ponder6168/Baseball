@@ -1,24 +1,14 @@
 package controller;
 
-import view.Menu;
 
-public class CreateTeamMenu implements Menu {
-
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
-	}
+public class CreateTeamMenu implements ExecutesMenu {
 
 	@Override
-	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void executeMenuChoice() {
+		System.out.println("Create Team Stub");
 	}
 
-	@Override
-	public void presentMenuToUser() {
-		System.out.println("Create Team menu stub");
+	public boolean equals(Object o){
+		return o.equals("CREATE_TEAM");
 	}
-
 }

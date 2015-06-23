@@ -19,12 +19,12 @@ public class TeamStorage {
 	public void storeTeamInFile(Team team){
 		allTeams = retriveExistingTeams();
 		allTeams.add(team);
-		storeAllTeams();
+		storeAllTeamsInFile(allTeams);
 	}
 
-	private void storeAllTeams() {
+	public void storeAllTeamsInFile(ArrayList<Team> listOfTeamsToStore) {
 		try(ObjectOutputStream out= new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(teamStorageFileName)))){
-			  for(Team team:allTeams ){
+			  for(Team team:listOfTeamsToStore ){
 	  			  out.writeObject(team);
 			  }
 		}catch(IOException e){

@@ -241,7 +241,7 @@ public class Team implements Serializable{
 						this.getTeam().get(player).getStolenBases(),
 						this.getTeam().get(player).getCaughtStealing());
 			}
-			return firstColumnHeadings+secondColumnHeadings+playerValues;
+			return heading+firstColumnHeadings+secondColumnHeadings+playerValues;
 		}
 
 	//The players are numbered starting at 1 for output, but 0 in the array.

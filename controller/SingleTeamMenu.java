@@ -1,25 +1,14 @@
 package controller;
 
-import view.Menu;
 
-public class SingleTeamMenu implements Menu {
-
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
-	}
+public class SingleTeamMenu implements ExecutesMenu {
 
 	@Override
-	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void executeMenuChoice() {
+		System.out.println("Single Team Stub");
 	}
 
-	@Override
-	public void presentMenuToUser() {
-		System.out.println("Single Team menu stub");
-
+	public boolean equals(Object o){
+		return o.equals("SINGLE_TEAM_SENARIO");
 	}
-
 }

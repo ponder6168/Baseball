@@ -19,6 +19,8 @@ import module.Team;
 import view.Input;
 
 public class SingleTeamPerformance {
+}
+/*
 	private static double iterations=100000;
 	private static String runsPerGameFile="runsPerGame";
 	public static double getIterations() {
@@ -136,39 +138,25 @@ public class SingleTeamPerformance {
 
 	public static void generateRunsPerGameHistogram(Team team ){
 		
-		/* 
-		 * gameRuns[4] holds the number of times 4 of runs was scored in iterataions
-		 * number of games.  iterations is set when the Game class is instantiated 
-		 * and is not changeable by the user.
-		 */
-		/*
-		 * histogramGameRuns[4] holds the percentage of times 4 runs were scored in a game.
-		 */
+
 		int [] gameRuns = new int[30];
 		double [] histogramGameRuns = new double[30];
 		for(int i=0; i<30; i++){
 			gameRuns[i]=0;
 		}
 		
-		/*
-		 * Determine whether steals are allowed and start the current batter at 0.
-		 */
-		
+
 		Boolean canSteal=team.getCanSteal();
 		team.setCurrentBatter(0);
 		
-		/*
-		 * Execute iterations number of 9 inning games.
-		 */
+
 		for(int j=0; j<iterations ;j++){
 			int totalRuns=0;
 			for(int i=0; i<9 ; i++){
 				int runs = team.playInning(team); // returns the number of runs scored in the inning.
 				totalRuns+=runs;  
 			}
-			/*
-			 * Count game run totals over 29 as 29 runs.  They rarely happen.
-			 */
+
 			if(totalRuns<30){
 				gameRuns[totalRuns]++;
 			}else{
@@ -700,3 +688,4 @@ public class SingleTeamPerformance {
 	}
 
 }
+*/

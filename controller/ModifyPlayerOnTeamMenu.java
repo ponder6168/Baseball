@@ -1,25 +1,25 @@
 package controller;
 
-import view.Menu;
+import module.Team;
 
-public class ModifyPlayerOnTeamMenu implements Menu {
+public class ModifyPlayerOnTeamMenu implements ExecutesMenuWithParameter {
+	
+	Team teamToModify;
 
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
+	public ModifyPlayerOnTeamMenu() {
 	}
 
 	@Override
-	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void presentMenuToUser() {
+	public void executeMenuChoice() {
 		System.out.println("Modify Player Stub");
-
 	}
 
+	@Override
+	public void setTeamToBeModified(Team team) {
+		this.teamToModify = teamToModify;
+	}
+
+	public boolean equals(Object o){
+		return o.equals("MODIFY_PLAYER");
+	}
 }

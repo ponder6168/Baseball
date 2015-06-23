@@ -1,25 +1,15 @@
 package controller;
 
-import view.Menu;
 
-public class TwoTeamMenu implements Menu {
-
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
-	}
+public class TwoTeamMenu implements ExecutesMenu {
 
 	@Override
-	public int getNumberOfMenuChoices() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void presentMenuToUser() {
+	public void executeMenuChoice() {
 		System.out.println("Two Team menu stub");
-
+		
 	}
 
+	public boolean equals(Object o){
+		return o.equals("TWO_TEAM_SENARIO");
+	}
 }

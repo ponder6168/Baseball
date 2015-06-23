@@ -1,38 +1,53 @@
 package controller;
 
-import view.Menu;
+import view.Input;
+import module.Team;
+import module.TeamTest;
 
-public class ModifyTeamBattingOrderMenu implements Menu {
-	private String menuChoices;
-	private static final int numberOfMenuChoices=9;
+public class ModifyTeamBattingOrderMenu implements ExecutesMenuWithParameter {
+	private Team teamToModify;
 	
-	enum ModifyTeamMenuChoices  {MODIFY_DESCRIPTON, MODIFY_BATTING_ORDER, MODIFY_PLAYER, MODIFY_STAT, QUIT}
+	@Override
+	public void executeMenuChoice() {
+		modifyBattingOrder();
+	}
 	
-	public ModifyTeamBattingOrderMenu() {
-		menuChoices= String.format("%n%s%n%n%s%n%s%n%s%n%s%n%s%n",
-				"Enter the number of your choice.",
-				"  1. Modify the team description.",
-				"  2. Modify the team batting order.",
-				"  3. Modify a player on the team.",
-				"  4. Modify the team statistic.",
-				"  5. Return to Main Menu.");
+	private void modifyBattingOrder() {
+		displayTeamToModify();
+		do{
+			int indexOfPlayerToMove = getPlayerToMove();
+			int indexOfWhereToMovePlayerTo = getPlayersNewLocation()
+			movePlayerToNewLocation(indexOfPlayerToMove,indexOfWhereToMovePlayerTo);
+			displayUpdatedTeamToModify();
+		}while(userWantsToMoveAnotherPlayer());
+	}
+
+
+
+	private void displayUpdatedTeamToModify() {
+		System.out.format("%n%s%n%n", "Here is the updated batting order.");
+		System.out.print(teamToModify);
+	}
+
+	private boolean userWantsToMoveAnotherPlayer() {
+		return Input.getYesOrNoFromTheUser("Do you want to move another player? (y/n)").equals("y");
+	}
+
+	private void displayTeamToModify() {
+		System.out.format("%n%s%n%n", "Here is the current batting order.");
+		System.out.print(teamToModify);
+		
 	}
 
 	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
+	public void setTeamToBeModified(Team team) {
+		this.teamToModify = team;
+		
+	}
+	
+	public boolean equals(Object o){
+		return o.equals("MODIFY_BATTING_ORDER");
 	}
 
-	@Override
-	public int getNumberOfMenuChoices() {
-		return numberOfMenuChoices;
-	}
-
-	@Override
-	public void presentMenuToUser() {
-		System.out.println("Modify Batting Order Stub");
-
-	}
 
 }

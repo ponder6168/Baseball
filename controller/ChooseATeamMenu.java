@@ -1,13 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import module.Team;
 import view.Input;
-import view.Menu;
 
-public class ChooseATeamMenu implements Menu {
+public class ChooseATeamMenu implements ExecutesMenu {
 	private Team chosenTeam;
 	private String menuChoices;
 	private ArrayList<Team> listOfAvailableTeams;
@@ -16,55 +13,51 @@ public class ChooseATeamMenu implements Menu {
 
 	public ChooseATeamMenu(ArrayList<Team> listOfAvailableTeams) {
 		this.listOfAvailableTeams = listOfAvailableTeams;
-		this.numberOfMenuChoices = listOfAvailableTeams.size();
-		StringBuilder menuMessage = new StringBuilder("Enter the number of the team you want to choose.") ;
-		menuMessage.append(System.lineSeparator()+System.lineSeparator());
+		this.numberOfMenuChoices = listOfAvailableTeams.size()+1; //Add one for the QUIT option
+		StringBuilder menuMessage = new StringBuilder(System.lineSeparator()) ;
+		menuMessage.append("Enter the number of the team you want to choose.") ;
+		menuMessage.append(System.lineSeparator()).append(System.lineSeparator());
 		
-		for(int i=0;i<listOfAvailableTeams.size();i++){
-			menuMessage.append((i+1)+".  "+listOfAvailableTeams.get(i).getDescription()+System.lineSeparator());
+		int lineNumberOfCurrentMenuOption=1;
+		for(Team team: listOfAvailableTeams){
+			menuMessage.append(lineNumberOfCurrentMenuOption++).append(".  ").append(team.getDescription()).append(System.lineSeparator());
 		}
+		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Main Menu.").append(System.lineSeparator());
 		menuChoices= menuMessage.toString();
 	}
 
-	@Override
-	public void printMenuChoices() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
-	public int getNumberOfMenuChoices() {
-		return this.numberOfMenuChoices;
-	}
-
-	@Override
-	public void presentMenuToUser() {
+	public void executeMenuChoice() {
 		this.chosenTeam = getUserTeamChoice();
 	}
 
 	private Team getUserTeamChoice() {
 		int userTeamChoiceFromMenu;
-		do{
-			userTeamChoiceFromMenu = new Input().menuChoice(this);
-		}while(correctTeamHasNotBeenChosen(userTeamChoiceFromMenu));
+		do {
+			System.out.print(menuChoices);
+			userTeamChoiceFromMenu = Input.getIntegerFromMinToMax(1,
+					numberOfMenuChoices) - 1;// Adjust user input for zero based index
+			if (userChoseToQuit(userTeamChoiceFromMenu)) {
+				return null;
+			}
+		} while (correctTeamHasNotBeenChosen(userTeamChoiceFromMenu));
 		return this.listOfAvailableTeams.get(userTeamChoiceFromMenu);
 	}
 	
 	private boolean correctTeamHasNotBeenChosen(int userTeamChoiceFromMenu) {
-		String teamDescription = this.listOfAvailableTeams.get(userTeamChoiceFromMenu).toString();
+		String chosenTeam= this.listOfAvailableTeams.get(userTeamChoiceFromMenu).toString();
+		System.out.print(chosenTeam);
 		return isThisTheWrongTeam();
 	}
 
-	private boolean isThisTheWrongTeam() {
-		System.out.format("%n%s%n", "Is this the correct team (Y/N). ");
-		String userChoice = getUserInput();
-		return userChoice=="n";
+	private boolean userChoseToQuit(int userTeamChoiceFromMenu) {
+		return userTeamChoiceFromMenu==numberOfMenuChoices-1;
 	}
 
-	private String getUserInput() {
-		Scanner scan = new Scanner(System.in);
-		String userInput = scan.next();
-		return userInput.toLowerCase();
+
+	private boolean isThisTheWrongTeam() {
+		return Input.getYesOrNoFromTheUser("Is this the correct team (Y/N). ").equals("n");
 	}
 
 	public Team getChosenTeam(){

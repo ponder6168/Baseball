@@ -5,11 +5,10 @@ import java.util.ArrayList;
 
 public class Histogram implements Serializable{
 	
-	
+}	
 	
 	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 810767236843005054L;
 	private static final int HISTOGRAMLENGTH=30;
 	private double [] runHistogramWithSteals=new double[HISTOGRAMLENGTH];
@@ -131,3 +130,4 @@ public class Histogram implements Serializable{
 	}
 
 }
+*/

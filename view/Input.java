@@ -3,36 +3,52 @@ package view;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import controller.ExecutesMenu;
+
 
 public class Input {
 
-	private int INVALID_MENU_CHOICE = -1;
-	private int menuChoice;
-
-	public int menuChoice(Menu menu){
-		do{
-			menu.printMenuChoices();
-			menuChoice = getInteger();
-		}while(menuChoiceIsInvalid(menu));
-		return menuChoice-1; //Adjust for zero index of array
-	}
-
-	private boolean menuChoiceIsInvalid(Menu menu) {
-		boolean inValid =!(0<menuChoice && menuChoice<=menu.getNumberOfMenuChoices());
-		if (inValid){
-			System.out.println("You did not enter an integer from 1 to "+menu.getNumberOfMenuChoices()+".");
-		}
-		return inValid;
-	}
-
-	private int getInteger() {
-		int userChoice;
-		try{
+	public static int getInteger() {
 			Scanner scan = new Scanner(System.in);
-			userChoice = scan.nextInt();
-		}catch(InputMismatchException e){
-			userChoice= INVALID_MENU_CHOICE;
+			while(!scan.hasNextInt()){
+				scan.next();
+				System.out.println("The value you entered is not an integer.  Please try again.");
+			}
+			 return scan.nextInt();
 		}
-		return userChoice;
+	
+	public static int getIntegerFromMinToMax(int minimumNumberAccepted, int maximumNumberAccepted){
+		int inputFromUser = getInteger();
+		while(inputFromUser<minimumNumberAccepted || maximumNumberAccepted<inputFromUser){
+			System.out.println("The value you entered is not from "+
+								minimumNumberAccepted+" to "+
+								maximumNumberAccepted+".  Please try again.");
+			inputFromUser = getInteger();
+		}
+		return inputFromUser;
+		
+	}
+	
+	public static String getYesOrNoFromTheUser(String promptMessage){
+		System.out.format("%n%s%n", promptMessage);
+		String userInput = getLowerCaseUserInput();
+		if(userEnteredInvalidChoice(userInput)){
+			System.out.format("%n%s%n", "You must enter Y, y, N or n.");
+			userInput = getYesOrNoFromTheUser(promptMessage);
+		}
+		return userInput;
+	}
+	
+	private static String getLowerCaseUserInput() {
+		Scanner scan = new Scanner(System.in);
+		String userInput = scan.next();
+		return userInput.toLowerCase();
+	}
+	
+	private static boolean userEnteredInvalidChoice(String userInput) {
+		return !(userInput.equals("y") || userInput.equals("n"));
 	}
 }
+
+
+

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Team implements Serializable{
 
 	public static final int BASE_IS_OPEN=-1;
+	public static final int NUMBER_OF_PLAYERS_ON_TEAM = 9;
 	private static final long serialVersionUID = 810767236843005054L;
 	private ArrayList<Player> team = new ArrayList<Player>();
 	private int currentBatter;
@@ -14,7 +15,6 @@ public class Team implements Serializable{
 	private String description;
 	private int outsInTheTeamAtBat;
 	private int maximumOutsInAnAtBat=3;
-	private int numberOfPlayersOnATeam = 9;
 	private int runsScoredInTheTeamAtBat;
 
 	// baseStatus[0]=n means the nth batter is on first, baseStatus[0]=BASE_IS_OPEN=-1 means the base is open
@@ -23,7 +23,7 @@ public class Team implements Serializable{
 	// Creates a team where every player has the default values.
 	public Team(String string){
 		this.team=new ArrayList<Player>();
-		for(int i=0; i<numberOfPlayersOnATeam ; i++){
+		for(int i=0; i<NUMBER_OF_PLAYERS_ON_TEAM ; i++){
 			this.team.add(new Player("default"));
 		}
 		this.currentBatter=0; //The leadoff hitter has an index of 0.

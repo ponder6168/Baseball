@@ -7,23 +7,25 @@ import controller.ExecutesMenu;
 
 
 public class Input {
+	static final Scanner scan = new Scanner(System.in);
 
-	public static int getInteger() {
-			Scanner scan = new Scanner(System.in);
+	public static int getInteger(String promptMessage) {
+		System.out.print(promptMessage);
 			while(!scan.hasNextInt()){
 				scan.next();
 				System.out.println("The value you entered is not an integer.  Please try again.");
+				System.out.print(promptMessage);
 			}
 			 return scan.nextInt();
 		}
 	
-	public static int getIntegerFromMinToMax(int minimumNumberAccepted, int maximumNumberAccepted){
-		int inputFromUser = getInteger();
+	public static int getIntegerFromMinToMax(int minimumNumberAccepted, int maximumNumberAccepted, String promptMessage){
+		int inputFromUser = getInteger(promptMessage);
 		while(inputFromUser<minimumNumberAccepted || maximumNumberAccepted<inputFromUser){
 			System.out.println("The value you entered is not from "+
 								minimumNumberAccepted+" to "+
 								maximumNumberAccepted+".  Please try again.");
-			inputFromUser = getInteger();
+			inputFromUser = getInteger(promptMessage);
 		}
 		return inputFromUser;
 		
@@ -40,7 +42,6 @@ public class Input {
 	}
 	
 	private static String getLowerCaseUserInput() {
-		Scanner scan = new Scanner(System.in);
 		String userInput = scan.next();
 		return userInput.toLowerCase();
 	}

@@ -5,7 +5,7 @@ public class TwoTeamMenu implements ExecutesMenu {
 
 	@Override
 	public void executeMenuChoice() {
-		System.out.println("Two Team menu stub");
+		System.out.format("%n%s%n%n","Two Team Stub");
 		
 	}
 

@@ -10,81 +10,100 @@ import module.TeamStorage;
 import view.Input;
 
 public class ModifyTeamMenu implements ExecutesMenu {
-	
-	enum ModifyTeamMenuChoices {
-		MODIFY_DESCRIPTON("  1. Modify the team description.",new ModifyTeamDescriptionMenu()),
-		MODIFY_BATTING_ORDER	("  2. Modify the team batting order.",new ModifyTeamBattingOrderMenu()),
-		MODIFY_PLAYER	("  3. Modify a player on the team.",new ModifyPlayerOnTeamMenu()),
-		MODIFY_STAT	("  4. Modify the team statistic.",new ModifyStatOnTeamMenu()),
-		QUIT	("  5. Return to Main Menu.",new QuitMenuWithParameter());
 
-		
+	enum ModifyTeamMenuChoices {
+		MODIFY_DESCRIPTON(". Modify the team description.",
+								new ModifyTeamDescriptionMenu()),
+		MODIFY_BATTING_ORDER	(". Modify the team batting order.",
+									new ModifyTeamBattingOrderMenu()),
+		MODIFY_PLAYER	(". Modify a player on the team.",
+							new ModifyPlayerOnTeamMenu()),
+		MODIFY_STAT	(". Modify the team statistic.",
+						new ModifyStatOnTeamMenu()),
+		QUIT	(". Return to Main Menu.",
+					new QuitMenuWithParameter());
+
+
 		private String promptMessage;
 		private ExecutesMenuWithParameter nextMenu;
 
-			private ModifyTeamMenuChoices(String promptMessage, ExecutesMenuWithParameter nextMenu) {
-				this.promptMessage=promptMessage;
-				this.nextMenu = nextMenu;
-			}
-
-			public void printMenu(){
-				System.out.format("%n%s%n%n", "Enter the number of your choice.");
-				for(ModifyTeamMenuChoices menuChoice: ModifyTeamMenuChoices.values()){
-					System.out.format("%s%n", menuChoice.promptMessage);
-				}
-			}
+		private ModifyTeamMenuChoices(String promptMessage,
+				ExecutesMenuWithParameter nextMenu) {
+			this.promptMessage=promptMessage;
+			this.nextMenu = nextMenu;
 		}
-	
-		private int menuChoice;
-		private int numberOfMenuChoices;
-		ArrayList<Team> listOfAvailableTeams;
-		private Team teamToModify;
 
-		public ModifyTeamMenu() {
-			this.numberOfMenuChoices=ModifyTeamMenuChoices.values().length;
-		}
-		
 		@Override
-		public void executeMenuChoice() {
-			ExecutesMenuWithParameter newMenu;
-			listOfAvailableTeams = new TeamStorage().retriveExistingTeams();
-			teamToModify = getTheTeamToModify();
-			do{
-				newMenu = getMenuChoice();
-				newMenu.setTeamToBeModified(teamToModify);
-				newMenu.executeMenuChoice();
-			}while(!newMenu.equals("QUIT"));
-			new TeamStorage().storeAllTeamsInFile(listOfAvailableTeams);
-		}
-
-		public ExecutesMenuWithParameter getMenuChoice(){
-			if(noTeamWasChoosenToModify()){
-				return ModifyTeamMenuChoices.values()[numberOfMenuChoices-1].nextMenu; //Return QUIT Menu
-			}
-			ModifyTeamMenuChoices sampleModifyTeamMenuChoice = ModifyTeamMenuChoices.MODIFY_BATTING_ORDER;
-			sampleModifyTeamMenuChoice.printMenu();
-			menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices);
-			return ModifyTeamMenuChoices.values()[menuChoice-1].nextMenu; //Subtract 1 to convert user input to zero based index
-		}
-
-		private boolean noTeamWasChoosenToModify() {
-			return teamToModify==null;
-		}
-
-		private Team getTheTeamToModify() {
-			ChooseATeamMenu chooseATeamToModify = new ChooseATeamMenu(listOfAvailableTeams);
-			chooseATeamToModify.executeMenuChoice();
-			return  chooseATeamToModify.getChosenTeam();
-		}
-		
-		public boolean equals(Object o){
-			return o.equals("MODIFY_TEAM");
+		public String toString(){
+			return this.promptMessage;
 		}
 	}
 
+	private int menuChoice;
+	private int numberOfMenuChoices;
+	private int teamToModifyIndex;
+	private String menuDisplay;
+
+	public ModifyTeamMenu() {
+		this.numberOfMenuChoices=ModifyTeamMenuChoices.values().length;
+		this.menuDisplay = buildMenuDisplay();
+	}
+
+	private String buildMenuDisplay() {
+		StringBuilder menuDisplay = new StringBuilder("Enter the number of your choice.");
+		menuDisplay.append(System.lineSeparator()).append(System.lineSeparator());
+		int lineNumber = 1;
+		for(ModifyTeamMenuChoices menuChoice: ModifyTeamMenuChoices.values()){
+			menuDisplay.append(lineNumber++).append(menuChoice.toString())
+			.append(System.lineSeparator());
+		}
+		return menuDisplay.toString();
+	}
+
+	@Override
+	public  String toString(){		
+		return this.menuDisplay;
+	}
+
+	@Override
+	public void executeMenuChoice() {
+		ExecutesMenuWithParameter newMenu;
+		teamToModifyIndex = getIndexOfTeamToModify();
+		do{
+			newMenu = getMenuChoice();
+			newMenu.setTeamToBeModifiedIndex(teamToModifyIndex);
+			newMenu.executeMenuChoice();
+		}while(!newMenu.equals("QUIT"));
+	}
+
+	private int getIndexOfTeamToModify() {
+		ChooseATeamMenu chooseATeamToModify = new ChooseATeamMenu();
+		chooseATeamToModify.executeMenuChoice();
+		return  chooseATeamToModify.getChosenTeam();
+	}
 
 
-	
+	public ExecutesMenuWithParameter getMenuChoice(){
+		if(noTeamWasChoosenToModify()){
+			return new QuitMenuWithParameter();
+		}
+		menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices,menuDisplay);
+		//Subtract 1 to convert user input to zero based index
+		return ModifyTeamMenuChoices.values()[menuChoice-1].nextMenu; 
+	}
+
+	private boolean noTeamWasChoosenToModify() {
+		return teamToModifyIndex==MainMenu.getListOfAvailableTeams().size();
+	}
+
+	public boolean equals(Object o){
+		return o.equals("MODIFY_TEAM");
+	}
+}
+
+
+
+
 
 
 

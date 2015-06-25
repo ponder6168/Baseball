@@ -5,63 +5,62 @@ import module.Team;
 import view.Input;
 
 public class ChooseATeamMenu implements ExecutesMenu {
-	private Team chosenTeam;
+	private int chosenTeamIndex;
 	private String menuChoices;
-	private ArrayList<Team> listOfAvailableTeams;
 	private int numberOfMenuChoices;
 
 
-	public ChooseATeamMenu(ArrayList<Team> listOfAvailableTeams) {
-		this.listOfAvailableTeams = listOfAvailableTeams;
-		this.numberOfMenuChoices = listOfAvailableTeams.size()+1; //Add one for the QUIT option
+	public ChooseATeamMenu() {
+		//Add one for the QUIT option
+		this.numberOfMenuChoices = MainMenu.getListOfAvailableTeams().size()+1; 
 		StringBuilder menuMessage = new StringBuilder(System.lineSeparator()) ;
 		menuMessage.append("Enter the number of the team you want to choose.") ;
 		menuMessage.append(System.lineSeparator()).append(System.lineSeparator());
-		
+
 		int lineNumberOfCurrentMenuOption=1;
-		for(Team team: listOfAvailableTeams){
-			menuMessage.append(lineNumberOfCurrentMenuOption++).append(".  ").append(team.getDescription()).append(System.lineSeparator());
+		for(Team team: MainMenu.getListOfAvailableTeams()){
+			menuMessage.append(lineNumberOfCurrentMenuOption++).append(".  ")
+						.append(team.getDescription()).append(System.lineSeparator());
 		}
-		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Main Menu.").append(System.lineSeparator());
+		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Main Menu.")
+					.append(System.lineSeparator());
 		menuChoices= menuMessage.toString();
 	}
 
-
 	@Override
 	public void executeMenuChoice() {
-		this.chosenTeam = getUserTeamChoice();
+		this.chosenTeamIndex = getIndexOfUserTeamChoice();
 	}
 
-	private Team getUserTeamChoice() {
+	private int getIndexOfUserTeamChoice() {
 		int userTeamChoiceFromMenu;
 		do {
-			System.out.print(menuChoices);
+			// Subtract 1 to adjust user input for zero based index
 			userTeamChoiceFromMenu = Input.getIntegerFromMinToMax(1,
-					numberOfMenuChoices) - 1;// Adjust user input for zero based index
-			if (userChoseToQuit(userTeamChoiceFromMenu)) {
-				return null;
-			}
+					numberOfMenuChoices,menuChoices) - 1;
 		} while (correctTeamHasNotBeenChosen(userTeamChoiceFromMenu));
-		return this.listOfAvailableTeams.get(userTeamChoiceFromMenu);
+		return userTeamChoiceFromMenu;
 	}
-	
+
 	private boolean correctTeamHasNotBeenChosen(int userTeamChoiceFromMenu) {
-		String chosenTeam= this.listOfAvailableTeams.get(userTeamChoiceFromMenu).toString();
+		if(userChoseToQuit(userTeamChoiceFromMenu)){
+			return false;
+		}
+		String chosenTeam= MainMenu.getListOfAvailableTeams().get(userTeamChoiceFromMenu).toString();
 		System.out.print(chosenTeam);
 		return isThisTheWrongTeam();
 	}
 
 	private boolean userChoseToQuit(int userTeamChoiceFromMenu) {
-		return userTeamChoiceFromMenu==numberOfMenuChoices-1;
+		return userTeamChoiceFromMenu == numberOfMenuChoices-1;
 	}
-
 
 	private boolean isThisTheWrongTeam() {
 		return Input.getYesOrNoFromTheUser("Is this the correct team (Y/N). ").equals("n");
 	}
 
-	public Team getChosenTeam(){
-		return this.chosenTeam;
+	public int getChosenTeam(){
+		return this.chosenTeamIndex;
 	}
 
 }

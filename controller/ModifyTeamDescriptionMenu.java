@@ -8,13 +8,21 @@ import view.Input;
 
 public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
 	private Team teamToModify;
-
-	public ModifyTeamDescriptionMenu() {
-	}
+	private int teamToModifyIndex;
 
 	@Override
 	public void executeMenuChoice() {
+		getTeamToModify();
 		setDescriptionOfTeamToModify(getNewTeamDescription());
+		saveTeamToModify();
+	}
+
+	private void getTeamToModify() {
+		teamToModify =  MainMenu.getListOfAvailableTeams().get(teamToModifyIndex);
+	}
+
+	private void saveTeamToModify() {
+		MainMenu.getListOfAvailableTeams().set(teamToModifyIndex,teamToModify);
 	}
 
 	private void setDescriptionOfTeamToModify(String newTeamDescription) {
@@ -40,13 +48,12 @@ public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
 		return  scan.nextLine();
 	}
 
-	@Override
-	public void setTeamToBeModified(Team team) {
-		this.teamToModify = team;
-	}
-
-
 	public boolean equals(Object o){
 		return o.equals("MODIFY_DESCRIPTION");
+	}
+
+	@Override
+	public void setTeamToBeModifiedIndex(int teamToModifyIndex) {
+		this.teamToModifyIndex = teamToModifyIndex;
 	}
 }

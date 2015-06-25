@@ -11,13 +11,13 @@ public class QuitMenuWithParameter implements ExecutesMenuWithParameter {
 		//empty
 	}
 
-	@Override
-	public void setTeamToBeModified(Team team) {
-		//empty
-	}
-
 	public boolean equals(Object o){
 		return o.equals("QUIT");
+	}
+
+	@Override
+	public void setTeamToBeModifiedIndex(int teamToModifyIndex) {
+		//Empty
 	}
 
 }

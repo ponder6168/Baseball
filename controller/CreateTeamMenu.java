@@ -5,7 +5,7 @@ public class CreateTeamMenu implements ExecutesMenu {
 
 	@Override
 	public void executeMenuChoice() {
-		System.out.println("Create Team Stub");
+		System.out.format("%n%s%n%n","Create Team Stub");
 	}
 
 	public boolean equals(Object o){

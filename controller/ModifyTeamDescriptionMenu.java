@@ -39,7 +39,7 @@ public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
 	}
 
 	private boolean userEnteredIncorrectDescription(String userInput) {
-		System.out.format("%n%s%s%n", "You entered ",userInput);
+		System.out.format("%n%s%s%s%n", "You entered: \"",userInput,"\"");
 		return Input.getYesOrNoFromTheUser("Is this the description you want? (Y/N)").equals("n");
 	}
 

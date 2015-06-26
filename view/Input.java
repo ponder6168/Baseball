@@ -1,16 +1,12 @@
 package view;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import controller.ExecutesMenu;
-
-
 public class Input {
-	static final Scanner scan = new Scanner(System.in);
+	private static final Scanner scan = new Scanner(System.in);
 
 	public static int getInteger(String promptMessage) {
-		System.out.print(promptMessage);
+		System.out.format("%n%s%n", promptMessage);
 			while(!scan.hasNextInt()){
 				scan.next();
 				System.out.println("The value you entered is not an integer.  Please try again.");

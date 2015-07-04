@@ -3,12 +3,15 @@ package module;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import module.Player.PlayerStats;
+import view.Input;
+
 
 public class Team implements Serializable{
 
 	public static final int BASE_IS_OPEN=-1;
 	public static final int NUMBER_OF_PLAYERS_ON_TEAM = 9;
-	private static final long serialVersionUID = 810767236843005054L;
+	private static final long serialVersionUID = 810767232243005054L;
 	private ArrayList<Player> team = new ArrayList<Player>();
 	private int currentBatter;
 	private Boolean playersCanSteal;
@@ -24,7 +27,7 @@ public class Team implements Serializable{
 	public Team(String string){
 		this.team=new ArrayList<Player>();
 		for(int i=0; i<NUMBER_OF_PLAYERS_ON_TEAM ; i++){
-			this.team.add(new Player("default"));
+			this.team.add(new Player());
 		}
 		this.currentBatter=0; //The leadoff hitter has an index of 0.
 		this.description="Default Team";
@@ -35,7 +38,7 @@ public class Team implements Serializable{
 		currentBatter=source.currentBatter;
 		playersCanSteal=source.playersCanSteal;
 		description = source.description;
-		for(Player player: source.team){
+		for(Player player: source.getTeam()){
 			team.add(new Player(player));
 		}
 	}
@@ -202,26 +205,6 @@ public class Team implements Serializable{
 		return 0;
 	}
 
-
-	//The players are numbered starting at 1 for output, but 0 in the array.
-		public void printTeamStandard(){
-			System.out.println();
-			System.out.println("Team Description: "+this.getDescription());
-			System.out.println();
-			System.out.println("Player At Bats  Hits  Singles  Doubles  Triples  Home Runs  Walks  Stolen Bases  Caught Stealing");
-			for(int i=0;i<9;i++){
-				System.out.format("%4d %8d %5d %8d %8d %8d %10d %6d %9d %16d%n",i+1,this.getTeam().get(i).getAtBats(),
-						this.getTeam().get(i).getHits(),
-						this.getTeam().get(i).getSingles(),
-						this.getTeam().get(i).getDoubles(),
-						this.getTeam().get(i).getTriples(),
-						this.getTeam().get(i).getHomeRuns(),
-						this.getTeam().get(i).getWalks(),
-						this.getTeam().get(i).getStolenBases(),
-						this.getTeam().get(i).getCaughtStealing());
-			}
-		}
-
 		@Override
 		//The players are numbered starting at 1 for output, but 0 in the array.
 		public String toString(){
@@ -244,43 +227,13 @@ public class Team implements Serializable{
 			return heading+firstColumnHeadings+secondColumnHeadings+playerValues;
 		}
 
-	//The players are numbered starting at 1 for output, but 0 in the array.
-	public void printTeamPlayer(int player){
-		System.out.println("Player At Bats  Hits  Singles  Doubles  Triples  Home Runs  Walks  Stolen Bases  Caught Stealing");
-		System.out.format("%4d %8d %5d %8d %8d %8d %10d %6d %9d %16d%n",player+1,this.getTeam().get(player).getAtBats(),
-				this.getTeam().get(player).getHits(),
-				this.getTeam().get(player).getSingles(),
-				this.getTeam().get(player).getDoubles(),
-				this.getTeam().get(player).getTriples(),
-				this.getTeam().get(player).getHomeRuns(),
-				this.getTeam().get(player).getWalks(),
-				this.getTeam().get(player).getStolenBases(),
-				this.getTeam().get(player).getCaughtStealing());
-
-	}
-
-
 	public ArrayList<Player> getTeam() {
-		ArrayList<Player> team = new ArrayList<>();
-		for(Player player: this.team){
-			team.add(new Player(player));
-		}
-		return team;
+		return new ArrayList<>(this.team);
 	}
-
 
 	public void setTeam(ArrayList<Player> team) {
-		int playerLocation=0;
-		for(Player player: team){
-			this.team.set(playerLocation++, new Player(player));
-		}
+		this.team = new ArrayList<>(team);
 	}
-
-	public Team(ArrayList<Player> team) {
-		super();
-		this.team = team;
-	}
-
 
 	public String getDescription() {
 		return description;
@@ -314,5 +267,53 @@ public class Team implements Serializable{
 	public Player getPlayer(int positionOfPlayerInBattingOrder){
 		return this.team.get(positionOfPlayerInBattingOrder);
 	}
+
+	public void createTeamFromTheConsole() {
+		int positionOfPlayerInBattingOrder=1;
+		for(Player player:this.team){
+			System.out.format("%n%n%s%s%s%n%n%n","     Enter the stats for player number ",
+					   					positionOfPlayerInBattingOrder++,
+					   					" in the batting order.");
+			player.setAllPlayerStatsFromConsole();
+		}
+	}
+
+	public void displayTeamWithMessage(String prompt) {
+		System.out.format("%n%n%n%s", prompt);
+		System.out.print(this);
+	}
+	
+	public void setSelectedStatForTeam(){
+		int usersChoice;
+		do{
+			displayTeamWithMessage("Here is the current team");
+			usersChoice = getIndexOfUsersChoice();
+			setStatOfUsersChoice(usersChoice);
+		}while(userWantsToChangeAnotherStat(usersChoice));
+	}
+	
+	private int getIndexOfUsersChoice() {
+		String promptMessage = new Player().getMenuDisplay();
+		return Input.getIntegerFromMinToMax(1, PlayerStats.values().length+1, promptMessage)-1;
+	}
+
+	private void setStatOfUsersChoice(int usersChoice) {
+		if(userWantsToChangeAnotherStat(usersChoice)){
+			int statValue = Input.getIntegerFromMinToMax(0, Integer.MAX_VALUE, "Enter the new value.");
+			PlayerStats statToChange = getPlayerStatToChange(usersChoice); 
+			for(Player player:team){
+				player.setStatWithValue(statToChange, statValue);
+			}
+		}
+	}
+
+	private boolean userWantsToChangeAnotherStat(int usersChoice) {
+		return usersChoice < PlayerStats.values().length;
+	}
+
+	private PlayerStats getPlayerStatToChange(int usersChoice) {
+		return PlayerStats.values()[usersChoice];
+	}
+
 
 }

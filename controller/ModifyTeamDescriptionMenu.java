@@ -1,28 +1,32 @@
 package controller;
 
-import java.util.Scanner;
-
+import java.util.ArrayList;
 import module.Team;
 import view.Input;
 
-
-public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
+public class ModifyTeamDescriptionMenu implements ExecutesMenu {
+	private ArrayList<Team> copyOfListOfAvailableTeams;
 	private Team teamToModify;
 	private int teamToModifyIndex;
+	
+	public ModifyTeamDescriptionMenu(int teamToModifyIndex) {
+		this.teamToModifyIndex = teamToModifyIndex;
+	}
 
 	@Override
 	public void executeMenuChoice() {
+		retrieveAvailableTeams();
 		getTeamToModify();
 		setDescriptionOfTeamToModify(getNewTeamDescription());
-		saveTeamToModify();
+		saveAvailableTeams();
+	}
+
+	private void retrieveAvailableTeams() {
+		copyOfListOfAvailableTeams = MainMenu.getListOfAvailableTeams();
 	}
 
 	private void getTeamToModify() {
-		teamToModify =  MainMenu.getListOfAvailableTeams().get(teamToModifyIndex);
-	}
-
-	private void saveTeamToModify() {
-		MainMenu.getListOfAvailableTeams().set(teamToModifyIndex,teamToModify);
+		teamToModify =  copyOfListOfAvailableTeams.get(teamToModifyIndex);
 	}
 
 	private void setDescriptionOfTeamToModify(String newTeamDescription) {
@@ -30,10 +34,11 @@ public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
 	}
 
 	private String getNewTeamDescription() {
-		System.out.format("%n%s%n", "Type the new description and press Enter.");
-		String userInput = getUserInput();
-		if(userEnteredIncorrectDescription(userInput)){
-			userInput = getNewTeamDescription();
+		String userInput = Input.getLineOfUserInput("Type the new description and press Enter."+
+													 System.lineSeparator());
+		while (userEnteredIncorrectDescription(userInput)){
+			userInput = Input.getLineOfUserInput("Type the new description and press Enter."+
+					 System.lineSeparator());
 		}
 		return userInput;
 	}
@@ -43,17 +48,11 @@ public class ModifyTeamDescriptionMenu implements ExecutesMenuWithParameter {
 		return Input.getYesOrNoFromTheUser("Is this the description you want? (Y/N)").equals("n");
 	}
 
-	private String getUserInput() {
-		Scanner scan = new Scanner(System.in);
-		return  scan.nextLine();
+	private void saveAvailableTeams() {
+		MainMenu.setListOfAvailableTeams(copyOfListOfAvailableTeams);
 	}
 
 	public boolean equals(Object o){
 		return o.equals("MODIFY_DESCRIPTION");
-	}
-
-	@Override
-	public void setTeamToBeModifiedIndex(int teamToModifyIndex) {
-		this.teamToModifyIndex = teamToModifyIndex;
 	}
 }

@@ -1,12 +1,10 @@
 package controller;
 
-import java.util.ArrayList;
 import module.Team;
 import view.Input;
 
-public class ChooseATeamMenu implements ExecutesMenu {
-	private int chosenTeamIndex;
-	private String menuChoices;
+public class ChooseATeamMenu  {
+	private String menuDisplay;
 	private int numberOfMenuChoices;
 
 
@@ -22,22 +20,17 @@ public class ChooseATeamMenu implements ExecutesMenu {
 			menuMessage.append(lineNumberOfCurrentMenuOption++).append(".  ")
 						.append(team.getDescription()).append(System.lineSeparator());
 		}
-		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Main Menu.")
+		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Previous Menu.")
 					.append(System.lineSeparator());
-		menuChoices= menuMessage.toString();
+		menuDisplay= menuMessage.toString();
 	}
 
-	@Override
-	public void executeMenuChoice() {
-		this.chosenTeamIndex = getIndexOfUserTeamChoice();
-	}
-
-	private int getIndexOfUserTeamChoice() {
+	public int getIndexOfChosenTeam(){
 		int userTeamChoiceFromMenu;
 		do {
 			// Subtract 1 to adjust user input for zero based index
-			userTeamChoiceFromMenu = Input.getIntegerFromMinToMax(1,
-					numberOfMenuChoices,menuChoices) - 1;
+			userTeamChoiceFromMenu = 
+					Input.getIntegerFromMinToMax(1,	numberOfMenuChoices,menuDisplay) - 1;
 		} while (correctTeamHasNotBeenChosen(userTeamChoiceFromMenu));
 		return userTeamChoiceFromMenu;
 	}
@@ -59,8 +52,5 @@ public class ChooseATeamMenu implements ExecutesMenu {
 		return Input.getYesOrNoFromTheUser("Is this the correct team (Y/N). ").equals("n");
 	}
 
-	public int getChosenTeam(){
-		return this.chosenTeamIndex;
-	}
 
 }

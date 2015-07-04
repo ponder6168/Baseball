@@ -6,40 +6,40 @@ import java.util.Collections;
 import view.Input;
 import module.Player;
 import module.Team;
-import module.TeamTest;
 
-public class ModifyTeamBattingOrderMenu implements ExecutesMenuWithParameter {
+public class ModifyTeamBattingOrderMenu implements ExecutesMenu {
+	private ArrayList<Team> copyOfListOfAvailableTeams;
 	private int teamToModifyIndex;
 	private Team teamToModify;
 	
-	@Override
-	public void executeMenuChoice() {
-		getTeamToModify();
-		modifyBattingOrder();
-		saveTeamToModify();
-	}
-	
-	private void getTeamToModify() {
-		teamToModify =  MainMenu.getListOfAvailableTeams().get(teamToModifyIndex);
+	public ModifyTeamBattingOrderMenu(int indexOfTeamToModify) {
+		this.teamToModifyIndex = indexOfTeamToModify;
 	}
 
-	private void saveTeamToModify() {
-		MainMenu.getListOfAvailableTeams().set(teamToModifyIndex,teamToModify);
+	@Override
+	public void executeMenuChoice() {
+		retrieveAvailableTeams();
+		getTeamToModify();
+		modifyBattingOrder();
+		saveAvailableTeams();
+	}
+	
+	private void retrieveAvailableTeams() {
+		copyOfListOfAvailableTeams = MainMenu.getListOfAvailableTeams();
+	}
+
+	private void getTeamToModify() {
+		teamToModify =  copyOfListOfAvailableTeams.get(teamToModifyIndex);
 	}
 
 	private void modifyBattingOrder() {
-		displayTeamToModify();
+		teamToModify.displayTeamWithMessage("Here is the current batting order.");
 		do{
 			int indexOfPlayerToMove = getPlayerToMove();
 			int indexOfWhereToMovePlayerTo = getPlayersNewLocation();
 			movePlayerToNewLocation(indexOfPlayerToMove,indexOfWhereToMovePlayerTo);
-			displayUpdatedTeamToModify();
+			teamToModify.displayTeamWithMessage("Here is the updated batting order.");
 		}while(userWantsToMoveAnotherPlayer());
-	}
-
-	private void displayTeamToModify() {
-		System.out.format("%n%s%n%n", "Here is the current batting order.");
-		System.out.print(teamToModify);
 	}
 
 	private int getPlayerToMove() {
@@ -62,22 +62,16 @@ public class ModifyTeamBattingOrderMenu implements ExecutesMenuWithParameter {
 		teamToModify.setTeam(localCopyOfTeam);
 	}
 
-	private void displayUpdatedTeamToModify() {
-		System.out.format("%n%s%n%n", "Here is the updated batting order.");
-		System.out.print(teamToModify);
-	}
-
 	private boolean userWantsToMoveAnotherPlayer() {
 		return Input.getYesOrNoFromTheUser("Do you want to move another player? (y/n)").equals("y");
+	}
+
+	private void saveAvailableTeams() {
+		MainMenu.setListOfAvailableTeams(copyOfListOfAvailableTeams);
 	}
 
 	public boolean equals(Object o){
 		return o.equals("MODIFY_BATTING_ORDER");
 	}
 
-	@Override
-	public void setTeamToBeModifiedIndex(int teamToModifyIndex) {
-		this.teamToModifyIndex = teamToModifyIndex;
-		
-	}
 }

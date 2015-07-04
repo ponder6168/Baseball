@@ -81,18 +81,18 @@ public class MainMenu implements ExecutesMenu {
 	}
 
 	public static ArrayList<Team> getListOfAvailableTeams() {
-		ArrayList<Team> copyOfListOfAvailableTeams = new ArrayList<>();
-		for(Team team: MainMenu.listOfAvailableTeams){
-			copyOfListOfAvailableTeams.add(team);
-		}
-		return copyOfListOfAvailableTeams;
+        ArrayList<Team> copyOfListOfAvailableTeams = new ArrayList<>();
+        for(Team team: MainMenu.listOfAvailableTeams){
+            copyOfListOfAvailableTeams.add(new Team(team));
+        }
+        return copyOfListOfAvailableTeams;
 	}
 
 	public static void setListOfAvailableTeams(ArrayList<Team> listOfAvailableTeams) {
-		MainMenu.listOfAvailableTeams.clear();
-		for(Team team:listOfAvailableTeams){
-			MainMenu.listOfAvailableTeams.add(team);
-		}
-	}
+	       MainMenu.listOfAvailableTeams.clear();
+	        for(Team team:listOfAvailableTeams){
+	            MainMenu.listOfAvailableTeams.add(new Team(team));
+	        }
+	    }
 }
 

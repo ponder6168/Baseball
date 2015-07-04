@@ -1,37 +1,49 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
-import controller.MainMenu.MainMenuChoices;
-import module.Team;
-import module.TeamStorage;
 import view.Input;
 
 public class ModifyTeamMenu implements ExecutesMenu {
 
 	enum ModifyTeamMenuChoices {
-		MODIFY_DESCRIPTON(". Modify the team description.",
-								new ModifyTeamDescriptionMenu()),
-		MODIFY_BATTING_ORDER	(". Modify the team batting order.",
-									new ModifyTeamBattingOrderMenu()),
-		MODIFY_PLAYER	(". Modify a player on the team.",
-							new ModifyPlayerOnTeamMenu()),
-		MODIFY_STAT	(". Modify the team statistic.",
-						new ModifyStatOnTeamMenu()),
-		QUIT	(". Return to Main Menu.",
-					new QuitMenuWithParameter());
+		MODIFY_DESCRIPTON(". Modify the team description."){
+			@Override
+			public ExecutesMenu getModifyMenu(int indexOfTeamToModify){
+				return 	new ModifyTeamDescriptionMenu(indexOfTeamToModify);
+			}
+		},
+		MODIFY_BATTING_ORDER	(". Modify the team batting order."){
+			@Override
+			public ExecutesMenu getModifyMenu(int indexOfTeamToModify){
+				return 	new ModifyTeamBattingOrderMenu(indexOfTeamToModify);
+			}
+		},
+		MODIFY_PLAYER	(". Modify a player on the team."){
+			@Override
+			public ExecutesMenu getModifyMenu(int indexOfTeamToModify){
+				return 	new ModifyPlayerOnTeamMenu(indexOfTeamToModify);
+			}
+		},
+		MODIFY_STAT	(". Modify the team statistic."){
+			@Override
+			public ExecutesMenu getModifyMenu(int indexOfTeamToModify){
+				return 	new ModifyStatOnTeamMenu(indexOfTeamToModify);
+			}
+		},
+		QUIT	(". Return to Previous Menu."){
+			@Override
+			public ExecutesMenu getModifyMenu(int indexOfTeamToModify){
+				return 	new QuitMenu();
+			}
+		};
 
 
 		private String promptMessage;
-		private ExecutesMenuWithParameter nextMenu;
 
-		private ModifyTeamMenuChoices(String promptMessage,
-				ExecutesMenuWithParameter nextMenu) {
+		private ModifyTeamMenuChoices(String promptMessage) {
 			this.promptMessage=promptMessage;
-			this.nextMenu = nextMenu;
 		}
+		
+		public abstract ExecutesMenu getModifyMenu(int indexOfTeamToModify);
 
 		@Override
 		public String toString(){
@@ -67,33 +79,45 @@ public class ModifyTeamMenu implements ExecutesMenu {
 
 	@Override
 	public void executeMenuChoice() {
-		ExecutesMenuWithParameter newMenu;
-		teamToModifyIndex = getIndexOfTeamToModify();
+		setTeamToModifyIndex();
+		modifyTeam();
+	}
+
+	private void setTeamToModifyIndex() {
+		teamToModifyIndex = new ChooseATeamMenu().getIndexOfChosenTeam();
+	}
+
+	public void modifyTeam() {
+		ExecutesMenu newMenu;
 		do{
+			displayTeamToModify();
 			newMenu = getMenuChoice();
-			newMenu.setTeamToBeModifiedIndex(teamToModifyIndex);
 			newMenu.executeMenuChoice();
 		}while(!newMenu.equals("QUIT"));
 	}
 
-	private int getIndexOfTeamToModify() {
-		ChooseATeamMenu chooseATeamToModify = new ChooseATeamMenu();
-		chooseATeamToModify.executeMenuChoice();
-		return  chooseATeamToModify.getChosenTeam();
-	}
-
-
-	public ExecutesMenuWithParameter getMenuChoice(){
-		if(noTeamWasChoosenToModify()){
-			return new QuitMenuWithParameter();
+	private void displayTeamToModify() {
+		if(userDidNotChooseQuit()){
+			MainMenu.getListOfAvailableTeams().get(teamToModifyIndex).
+	         displayTeamWithMessage("Here is the team you are modifying");
 		}
-		menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices,menuDisplay);
-		//Subtract 1 to convert user input to zero based index
-		return ModifyTeamMenuChoices.values()[menuChoice-1].nextMenu; 
 	}
 
-	private boolean noTeamWasChoosenToModify() {
-		return teamToModifyIndex==MainMenu.getListOfAvailableTeams().size();
+	private boolean userDidNotChooseQuit() {
+		return teamToModifyIndex < MainMenu.getListOfAvailableTeams().size();
+	}
+
+	public ExecutesMenu getMenuChoice(){
+		if(userDidNotChooseQuit()){
+			menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices,menuDisplay);
+			//Subtract 1 to convert user input to zero based index
+			return ModifyTeamMenuChoices.values()[menuChoice-1].getModifyMenu(teamToModifyIndex); 
+		}
+		return ModifyTeamMenuChoices.QUIT.getModifyMenu(teamToModifyIndex);
+	}
+	
+	public void setTeamToModifyIndex(int teamToModifyIndex){
+		this.teamToModifyIndex = teamToModifyIndex;
 	}
 
 	public boolean equals(Object o){

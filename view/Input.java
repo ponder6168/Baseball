@@ -29,22 +29,28 @@ public class Input {
 	
 	public static String getYesOrNoFromTheUser(String promptMessage){
 		System.out.format("%n%s%n", promptMessage);
-		String userInput = getLowerCaseUserInput();
-		if(userEnteredInvalidChoice(userInput)){
-			System.out.format("%n%s%n", "You must enter Y, y, N or n.");
-			userInput = getYesOrNoFromTheUser(promptMessage);
-		}
-		return userInput;
-	}
-	
-	private static String getLowerCaseUserInput() {
 		String userInput = scan.next();
+		while(userEnteredInvalidChoice(userInput)){
+			System.out.format("%n%s%n", "You must enter Y, y, N or n.");
+			System.out.format("%n%s%n", promptMessage);
+			userInput = scan.next();
+		}
 		return userInput.toLowerCase();
 	}
 	
 	private static boolean userEnteredInvalidChoice(String userInput) {
-		return !(userInput.equals("y") || userInput.equals("n"));
+		return !(userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("n"));
 	}
+	
+	public static String getLineOfUserInput(String prompt) {
+		System.out.print(prompt);
+		String line;
+		do{
+			line = scan.nextLine();
+		} while(line.trim().isEmpty());
+		return  line;
+	}
+
 }
 
 

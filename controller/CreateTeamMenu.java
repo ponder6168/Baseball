@@ -1,7 +1,6 @@
 package controller;
 
 import view.Input;
-import controller.MainMenu.MainMenuChoices;
 
 public class CreateTeamMenu implements ExecutesMenu {
 	
@@ -12,7 +11,7 @@ public class CreateTeamMenu implements ExecutesMenu {
 									new CreateTeamFromExistingTeamMenu()),
 		CREATE_TEAM_FROM_SCRATCH	(". Create a team by entering each player individually.",
 							new CreateTeamFromScratchMenu()),
-		QUIT	(". Return to Main Menu.",
+		QUIT	(". Return to Previous Menu.",
 					new QuitMenu());
 
 

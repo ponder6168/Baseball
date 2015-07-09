@@ -7,12 +7,12 @@ import module.Player.PlayerStats;
 import view.Input;
 
 
-public class Team implements Serializable{
+public class Team implements Serializable, Storable {
 
 	public static final int BASE_IS_OPEN=-1;
 	public static final int NUMBER_OF_PLAYERS_ON_TEAM = 9;
 	private static final long serialVersionUID = 810767232243005054L;
-	private ArrayList<Player> team = new ArrayList<Player>();
+	private ArrayList<Player> players = new ArrayList<Player>();
 	private int currentBatter;
 	private Boolean playersCanSteal;
 	private String description;
@@ -24,10 +24,10 @@ public class Team implements Serializable{
 	private int[] baseStatus =  new int[]{BASE_IS_OPEN,BASE_IS_OPEN,BASE_IS_OPEN} ; 
 
 	// Creates a team where every player has the default values.
-	public Team(String string){
-		this.team=new ArrayList<Player>();
+	public Team(){
+		this.players=new ArrayList<Player>();
 		for(int i=0; i<NUMBER_OF_PLAYERS_ON_TEAM ; i++){
-			this.team.add(new Player());
+			this.players.add(new Player());
 		}
 		this.currentBatter=0; //The leadoff hitter has an index of 0.
 		this.description="Default Team";
@@ -38,9 +38,18 @@ public class Team implements Serializable{
 		currentBatter=source.currentBatter;
 		playersCanSteal=source.playersCanSteal;
 		description = source.description;
-		for(Player player: source.getTeam()){
-			team.add(new Player(player));
+		for(Player player: source.getPlayers()){
+			players.add(new Player(player));
 		}
+	}
+	
+	@Override
+	public Storable deepCopy() {
+		return new Team(this);
+	}
+
+	public Team(Storable team2) {
+		this((Team) team2);
 	}
 
 	public int runsFromTeamAtBat( ){
@@ -48,7 +57,7 @@ public class Team implements Serializable{
 		outsInTheTeamAtBat=0;
 		runsScoredInTheTeamAtBat=0;
 		while(teamAtBatIsNotOver()){
-			AtBatResult whatTheBatterDid = team.get(currentBatter).resultOfPlayerAtBat();
+			AtBatResult whatTheBatterDid = players.get(currentBatter).resultOfPlayerAtBat();
 			updateRunsInTheInning(whatTheBatterDid);
 			advanceRunners(whatTheBatterDid);
 			updateOuts(whatTheBatterDid);
@@ -186,7 +195,7 @@ public class Team implements Serializable{
 
 	private boolean stealIsSuccessful() {
 		//If the random number is below the successful steal percentage of the runner on first, the steal is successful
-		return Math.random()<team.get(getWhoIsOnBase(Bases.FIRST)).getPercentageStolenBases();
+		return Math.random()<players.get(getWhoIsOnBase(Bases.FIRST)).getPercentageStolenBases();
 	}
 
 	private boolean runnerOnFirstAndSecondIsOpen() {
@@ -214,25 +223,32 @@ public class Team implements Serializable{
 				String playerValues = "";
 			for(int player=0;player<9;player++){
 					playerValues +=  String.format("%4d %7d %5d %7d %7d %8d %9d %8d %7d %8d%n"
-						,player+1,this.getTeam().get(player).getAtBats(),
-						this.getTeam().get(player).getHits(),
-						this.getTeam().get(player).getSingles(),
-						this.getTeam().get(player).getDoubles(),
-						this.getTeam().get(player).getTriples(),
-						this.getTeam().get(player).getHomeRuns(),
-						this.getTeam().get(player).getWalks(),
-						this.getTeam().get(player).getStolenBases(),
-						this.getTeam().get(player).getCaughtStealing());
+						,player+1,this.players.get(player).getAtBats(),
+						this.players.get(player).getHits(),
+						this.players.get(player).getSingles(),
+						this.players.get(player).getDoubles(),
+						this.players.get(player).getTriples(),
+						this.players.get(player).getHomeRuns(),
+						this.players.get(player).getWalks(),
+						this.players.get(player).getStolenBases(),
+						this.players.get(player).getCaughtStealing());
 			}
 			return heading+firstColumnHeadings+secondColumnHeadings+playerValues;
 		}
 
-	public ArrayList<Player> getTeam() {
-		return new ArrayList<>(this.team);
+	public ArrayList<Player> getPlayers() {
+		ArrayList<Player> tempPlayerList = new ArrayList<>();
+		for(Player player:this.players){
+			tempPlayerList.add(new Player(player));
+		}
+		return tempPlayerList;
 	}
 
-	public void setTeam(ArrayList<Player> team) {
-		this.team = new ArrayList<>(team);
+	public void setPlayers(ArrayList<Player> players) {
+		this.players.clear();
+		for(Player player:players){
+			this.players.add(player);
+		}
 	}
 
 	public String getDescription() {
@@ -261,16 +277,32 @@ public class Team implements Serializable{
 
 	// First position in the batting order has an index of 0.
 	public void setPlayer(Player player, int positionOfPlayerInBattingOrder){
-		this.team.set(positionOfPlayerInBattingOrder, player);
+		this.players.set(positionOfPlayerInBattingOrder, new Player(player));
 	}
 
 	public Player getPlayer(int positionOfPlayerInBattingOrder){
-		return this.team.get(positionOfPlayerInBattingOrder);
+		return  this.players.get(positionOfPlayerInBattingOrder);
+	}
+	
+	public Player getPlayerFromConsole(String prompt) {
+		Player player;
+		do{
+			System.out.print(this);
+			int chosenPlayer = Input.getIntegerFromMinToMax
+					(1, Team.NUMBER_OF_PLAYERS_ON_TEAM,prompt);
+			player = this.getPlayer(chosenPlayer-1);
+		}while(!correctPlayerIsChosen(player));
+		return  player;
+	}
+
+	private boolean correctPlayerIsChosen(Player player) {
+		System.out.print(player);
+		return Input.getYesOrNoFromTheUser("Is this the correct player? (y/n)").equals("y");
 	}
 
 	public void createTeamFromTheConsole() {
 		int positionOfPlayerInBattingOrder=1;
-		for(Player player:this.team){
+		for(Player player:this.players){
 			System.out.format("%n%n%s%s%s%n%n%n","     Enter the stats for player number ",
 					   					positionOfPlayerInBattingOrder++,
 					   					" in the batting order.");
@@ -301,7 +333,7 @@ public class Team implements Serializable{
 		if(userWantsToChangeAnotherStat(usersChoice)){
 			int statValue = Input.getIntegerFromMinToMax(0, Integer.MAX_VALUE, "Enter the new value.");
 			PlayerStats statToChange = getPlayerStatToChange(usersChoice); 
-			for(Player player:team){
+			for(Player player:players){
 				player.setStatWithValue(statToChange, statValue);
 			}
 		}

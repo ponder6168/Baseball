@@ -15,7 +15,13 @@ public class Input {
 			 return scan.nextInt();
 		}
 	
-	public static int getIntegerFromMinToMax(int minimumNumberAccepted, int maximumNumberAccepted, String promptMessage){
+	public static int getIntegerFromMinToMax(int minimumNumberAccepted,
+												int maximumNumberAccepted,
+													String promptMessage){
+		if(minimumNumberAccepted>maximumNumberAccepted){
+			throw new IllegalArgumentException("Maximum number (2nd number) "+
+												"cannot be less than minimum number.");
+		}
 		int inputFromUser = getInteger(promptMessage);
 		while(inputFromUser<minimumNumberAccepted || maximumNumberAccepted<inputFromUser){
 			System.out.println("The value you entered is not from "+

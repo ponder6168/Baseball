@@ -2,25 +2,26 @@ package module;
 
 
 
-import module.CummulativeSingleTeamGameResults;
+import module.SingleTeamSimulationResults;
 import module.Team;
 
 
-public class SingleTeamRunProduction {
+public class SingleTeamSimulation {
 
 	private static double iterations=100000;
 	private int NUMBER_OF_INNINGS_IN_A_GAME = 9;
 	private int currentInnning;
+	
 	public static double getIterations() {
 		return iterations;
 	}
 
 	public static void setIterations(double iterations) {
-		SingleTeamRunProduction.iterations = iterations;
+		SingleTeamSimulation.iterations = iterations;
 	}
 
-	public CummulativeSingleTeamGameResults playMultipleGames(Team team){
-		CummulativeSingleTeamGameResults runningTotalOfGameResults = new CummulativeSingleTeamGameResults();
+	public SingleTeamSimulationResults playMultipleGames(Team team){
+		SingleTeamSimulationResults runningTotalOfGameResults = new SingleTeamSimulationResults();
 		for(int i=0;i<iterations;i++){
 			int runsFromSingleGame = playSingleTeamSingleGame(team);
 			runningTotalOfGameResults = addSingleGameToRunningTotal(runningTotalOfGameResults,runsFromSingleGame);
@@ -43,12 +44,14 @@ public class SingleTeamRunProduction {
 	}
 	
 
-	private CummulativeSingleTeamGameResults addSingleGameToRunningTotal(CummulativeSingleTeamGameResults runningTotalOfGameResults,
+	private SingleTeamSimulationResults addSingleGameToRunningTotal
+		(SingleTeamSimulationResults runningTotalOfGameResults,
 			int runsFromSingleGame) {
 		int runningTotalOfRunsScored = runningTotalOfGameResults.getTotalRunsScored()+runsFromSingleGame;
 		runningTotalOfGameResults.setTotalRunsScored(runningTotalOfRunsScored);
 		int [] runningRunsPerGameDistribution = runningTotalOfGameResults.getRunsPerGameDistribution();
-		runningRunsPerGameDistribution = updateRunningRunsPerGameDistribution(runningRunsPerGameDistribution,runsFromSingleGame);
+		runningRunsPerGameDistribution = 
+				updateRunningRunsPerGameDistribution(runningRunsPerGameDistribution,runsFromSingleGame);
 		runningTotalOfGameResults.setRunsPerGameDistribution(runningRunsPerGameDistribution);
 		return runningTotalOfGameResults;
 	}
@@ -56,8 +59,8 @@ public class SingleTeamRunProduction {
 
 	private int[] updateRunningRunsPerGameDistribution(
 			int[] runningRunsPerGameDistribution, int runsFromSingleGame) {
-			if (runsFromSingleGame>=CummulativeSingleTeamGameResults.MAX_RUNS_PER_INNING_RECORDED)
-				runningRunsPerGameDistribution[CummulativeSingleTeamGameResults.MAX_RUNS_PER_INNING_RECORDED]++;
+			if (runsFromSingleGame>=SingleTeamSimulationResults.MAX_RUNS_PER_INNING_RECORDED)
+				runningRunsPerGameDistribution[SingleTeamSimulationResults.MAX_RUNS_PER_INNING_RECORDED]++;
 			else
 				runningRunsPerGameDistribution[runsFromSingleGame]++;
 		return runningRunsPerGameDistribution;

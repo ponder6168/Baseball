@@ -1,11 +1,13 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 
 public class ModifyStatOnTeamMenu implements ExecutesMenu {
-	private ArrayList<Team> copyOfListOfAvailableTeams;
+	private List<Storable> copyOfListOfAvailableTeams;
 	private Team teamToModify;
 	private int teamToModifyIndex;
 
@@ -26,15 +28,15 @@ public class ModifyStatOnTeamMenu implements ExecutesMenu {
 	}
 
 	private void retrieveAvailableTeams() {
-		copyOfListOfAvailableTeams = MainMenu.getListOfAvailableTeams();
+		copyOfListOfAvailableTeams = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 	}
 
 	private void getTeamToModify() {
-		teamToModify =  copyOfListOfAvailableTeams.get(teamToModifyIndex);
+		teamToModify =  (Team) copyOfListOfAvailableTeams.get(teamToModifyIndex);
 	}
 
 	private void saveAvailableTeams() {
-		MainMenu.setListOfAvailableTeams(copyOfListOfAvailableTeams);
+		MainMenu.setListOfStorableObjects(StorageObject.TEAM, copyOfListOfAvailableTeams);
 	}
 
 

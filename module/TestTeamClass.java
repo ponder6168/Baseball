@@ -7,7 +7,7 @@ public class TestTeamClass {
 	}
 
 	public static void main(String[] args) {
-			Team team = new Team("default");
+			Team team = new Team();
 			System.out.print(team);
 		
 		}

@@ -1,13 +1,15 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 
 public class CreateTeamFromExistingTeamMenu implements ExecutesMenu {
 
 	private int teamToModifyIndex;
-	private ArrayList<Team> tempListOfTeamsAvailable;
+	private List<Storable> tempListOfTeamsAvailable;
 	
 	@Override
 	public void executeMenuChoice() {
@@ -18,13 +20,15 @@ public class CreateTeamFromExistingTeamMenu implements ExecutesMenu {
 	}
 
 	private void retriveAvailableTeams() {
-		tempListOfTeamsAvailable = MainMenu.getListOfAvailableTeams();
+		tempListOfTeamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 	}
 
 	private void createNewTeam() {
-		teamToModifyIndex = new ChooseATeamMenu().getIndexOfChosenTeam();
+		teamToModifyIndex = new ChooseATeamMenu(
+				"Choose the team you wish to use to copy and modify.")
+					.getIndexOfChosenTeam();
 		if(userDidNotChooseQuit()){
-			Team teamToStartWith = tempListOfTeamsAvailable.get(teamToModifyIndex);
+			Team teamToStartWith = (Team) tempListOfTeamsAvailable.get(teamToModifyIndex);
 			tempListOfTeamsAvailable.add(new Team(teamToStartWith));			
 		}
 	}
@@ -34,13 +38,13 @@ public class CreateTeamFromExistingTeamMenu implements ExecutesMenu {
 	}
 
 	private void saveAvailableTeams() {
-		MainMenu.setListOfAvailableTeams(tempListOfTeamsAvailable);
+		MainMenu.setListOfStorableObjects(StorageObject.TEAM, tempListOfTeamsAvailable);
 	}
 
 	private void modifyNewTeam() {
 		if(userDidNotChooseQuit()){
 			ModifyTeamMenu modifyTeam = new ModifyTeamMenu();
-			modifyTeam.setTeamToModifyIndex(teamToModifyIndex);
+			modifyTeam.setTeamToModifyIndex(tempListOfTeamsAvailable.size()-1);
 			modifyTeam.modifyTeam();
 		}
 	}

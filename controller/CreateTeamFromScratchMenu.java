@@ -1,11 +1,12 @@
 package controller;
 
-import java.util.ArrayList;
-
+import java.util.List;
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 
 public class CreateTeamFromScratchMenu implements ExecutesMenu {
-	private ArrayList<Team> tempListOfTeamsAvailable;
+	private List<Storable> tempListOfTeamsAvailable;
 	private Team newTeam;
 	
 	@Override
@@ -26,21 +27,22 @@ public class CreateTeamFromScratchMenu implements ExecutesMenu {
 
 		private void modifyNewTeam() {
 			ModifyTeamMenu modifyTeam = new ModifyTeamMenu();
-			modifyTeam.setTeamToModifyIndex(MainMenu.getListOfAvailableTeams().size()-1);
+			modifyTeam.setTeamToModifyIndex(
+					MainMenu.getListOfStorableObjects(StorageObject.TEAM).size()-1);
 			modifyTeam.modifyTeam();
 	}
 
 		private void retriveAvailableTeams() {
-			tempListOfTeamsAvailable = MainMenu.getListOfAvailableTeams();
+			tempListOfTeamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 		}
 
 		private void createNewTeam() {
-			newTeam = new Team("default");
+			newTeam = new Team();
 			newTeam.createTeamFromTheConsole();
 			tempListOfTeamsAvailable.add(newTeam);			
 		}
 		
 		private void saveAvailableTeams() {
-			MainMenu.setListOfAvailableTeams(tempListOfTeamsAvailable);
+			MainMenu.setListOfStorableObjects(StorageObject.TEAM, tempListOfTeamsAvailable);
 		}
 }

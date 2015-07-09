@@ -218,6 +218,18 @@ public class Player implements Serializable{
 		return this.menuDisplay;
 	}
 
+	public String chooseStatDisplay(String prompt) {
+		StringBuilder menuDisplay = new StringBuilder(prompt);
+		menuDisplay.append(System.lineSeparator()).append(System.lineSeparator());
+		int lineNumber = 1;
+		for(PlayerStats menuChoice: PlayerStats.values()){
+			menuDisplay.append(lineNumber++).append(menuChoice.toString())
+			.append(System.lineSeparator());
+		}
+		return menuDisplay.toString();
+	}
+	
+
 	@Override
 	public String toString( ){
 		String firstColumnHeadings = String.format("%s%n", "  At                                                      Stolen    Caught ");
@@ -258,6 +270,7 @@ public class Player implements Serializable{
 		if(usersChoice<PlayerStats.values().length){
 			PlayerStats.values()[usersChoice].setPlayerStatWithPrompt(this);
 		}
+		setCutOffs();
 	}
 
 	private boolean userWantsToChangeAnotherStat(int usersChoice) {
@@ -266,13 +279,14 @@ public class Player implements Serializable{
 	
 	public void setStatWithValue(PlayerStats statToChange, int statValue) {
 			statToChange.setPlayerStat(this,statValue);
+			setCutOffs();
 		}
 
 	public int getHits() {
 		return hits;
 	}
 
-	public void setHits(int hits) {
+	private void setHits(int hits) {
 		this.hits = hits;
 	}
 	
@@ -280,7 +294,7 @@ public class Player implements Serializable{
 		return atBats;
 	}
 
-	public void setAtBats(int atBats) {
+	private void setAtBats(int atBats) {
 		this.atBats = atBats;
 }
 
@@ -292,7 +306,7 @@ public class Player implements Serializable{
 		return doubles;
 	}
 
-	public void setDoubles(int doubles) {
+	private void setDoubles(int doubles) {
 		this.doubles = doubles;
 	}
 
@@ -300,7 +314,7 @@ public class Player implements Serializable{
 		return triples;
 	}
 
-	public void setTriples(int triples) {
+	private void setTriples(int triples) {
 		this.triples = triples;
 	}
 
@@ -308,7 +322,7 @@ public class Player implements Serializable{
 		return homeRuns;
 	}
 
-	public void setHomeRuns(int homeRuns) {
+	private void setHomeRuns(int homeRuns) {
 		this.homeRuns = homeRuns;
 	}
 
@@ -316,7 +330,7 @@ public class Player implements Serializable{
 		return walks;
 	}
 
-	public void setWalks(int walks) {
+	private void setWalks(int walks) {
 		this.walks = walks;
 	}
 
@@ -324,7 +338,7 @@ public class Player implements Serializable{
 		return stolenBases;
 	}
 
-	public void setStolenBases(int stolenBases) {
+	private void setStolenBases(int stolenBases) {
 		this.stolenBases = stolenBases;
 	}
 
@@ -332,7 +346,7 @@ public class Player implements Serializable{
 		return caughtStealing;
 	}
 
-	public void setCaughtStealing(int caughtStealing) {
+	private void setCaughtStealing(int caughtStealing) {
 		this.caughtStealing = caughtStealing;
 	}
 

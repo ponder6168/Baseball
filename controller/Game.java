@@ -2,7 +2,7 @@ package controller;
 
 
 import module.CummulativeGameResults;
-import module.SingleGameResults;
+import module.TwoTeamSimulationResults;
 import module.Team;
 
 public class Game {
@@ -20,14 +20,14 @@ public class Game {
 	public CummulativeGameResults playMultipleGames(Team firstTeam, Team secondTeam){
 		CummulativeGameResults runningTotalOfGameResults = new CummulativeGameResults();
 		for(int i=0;i<iterations;i++){
-			SingleGameResults singleGameResults = playSingleGame(firstTeam, secondTeam);
+			TwoTeamSimulationResults singleGameResults = playSingleGame(firstTeam, secondTeam);
 			runningTotalOfGameResults = addSingleGameToRunningTotal(runningTotalOfGameResults,singleGameResults);
 		}
 		return runningTotalOfGameResults;
 	}
 
 	private CummulativeGameResults addSingleGameToRunningTotal(CummulativeGameResults runningTotalOfGameResults,
-																SingleGameResults singleGameResults) {
+																TwoTeamSimulationResults singleGameResults) {
 			runningTotalOfGameResults.setTotalFirstTeamRunsScored(singleGameResults.getFirstTeamRunsScored()+runningTotalOfGameResults.getTotalFirstTeamRunsScored());
 			runningTotalOfGameResults.setTotalSecondTeamRunsScored(singleGameResults.getSecondTeamRunsScored()+runningTotalOfGameResults.getTotalSecondTeamRunsScored());
 			updateWinTotals(runningTotalOfGameResults,singleGameResults);
@@ -35,15 +35,15 @@ public class Game {
 	}
 
 	private void updateWinTotals(CummulativeGameResults runningTotalOfGameResults,
-									SingleGameResults singleGameResults) {
+									TwoTeamSimulationResults singleGameResults) {
 		if(singleGameResults.getFirstTeamRunsScored()>singleGameResults.getSecondTeamRunsScored())
 			runningTotalOfGameResults.incrementTimesFirstTeamWonTheGame();
 		else
 			runningTotalOfGameResults.incrementTimesSecondTeamWonTheGame();
 	}
 
-	private SingleGameResults playSingleGame(Team firstTeam, Team secondTeam) {
-		SingleGameResults gameResult = new SingleGameResults();
+	private TwoTeamSimulationResults playSingleGame(Team firstTeam, Team secondTeam) {
+		TwoTeamSimulationResults gameResult = new TwoTeamSimulationResults();
 		gameResult.setFirstTeam(firstTeam);
 		gameResult.setSecondTeam(secondTeam);
 		gameResult.setFirstTeamRunsScored(0);
@@ -58,7 +58,7 @@ public class Game {
 	}
 
 
-	private boolean gameNotOver(SingleGameResults gameResult) {
+	private boolean gameNotOver(TwoTeamSimulationResults gameResult) {
 		// TODO Auto-generated method stub
 		return currentInnning<=NUMBER_OF_INNINGS_IN_A_GAME || gameResult.getFirstTeamRunsScored()==gameResult.getSecondTeamRunsScored();
 	}

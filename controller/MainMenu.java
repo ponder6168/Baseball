@@ -1,9 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
-
-import module.Team;
-import module.TeamStorage;
+import java.util.List;
+import module.Storable;
+import module.StorageAndRetrieval;
+import module.StorageObject;
 import view.Input;
 
 public class MainMenu implements ExecutesMenu {
@@ -29,7 +30,8 @@ public class MainMenu implements ExecutesMenu {
 		}
 	}
 
-	private static ArrayList<Team> listOfAvailableTeams;
+	private static List<List<Storable>> listOfStorableLists=new ArrayList<>();
+
 	private int menuChoice;
 	private int numberOfMenuChoices;
 	private String menuDisplay;
@@ -45,7 +47,7 @@ public class MainMenu implements ExecutesMenu {
 		int lineNumber = 1;
 		for(MainMenuChoices menuChoice: MainMenuChoices.values()){
 			menuDisplay.append(lineNumber++).append(menuChoice.toString())
-											.append(System.lineSeparator());
+			.append(System.lineSeparator());
 		}
 		return menuDisplay.toString();
 	}
@@ -57,17 +59,20 @@ public class MainMenu implements ExecutesMenu {
 
 	@Override
 	public void executeMenuChoice() {
-		loadAllAvailableTeams();
+		loadStoredData();
 		ExecutesMenu newMenu;
 		do{
 			newMenu = getMenuChoice();
 			newMenu.executeMenuChoice();			
 		}while(!newMenu.equals("QUIT"));
-		storeAllAvailableTeams();
+		saveAllStorableLists();
 	}
 
-	private void loadAllAvailableTeams() {
-		listOfAvailableTeams = new TeamStorage().retriveExistingTeams();
+	private void loadStoredData() {
+		for(StorageObject storageObject: StorageObject.values()){
+			listOfStorableLists
+				.add(new StorageAndRetrieval(storageObject).retrieveExistingObjects());
+		}
 	}
 
 	private ExecutesMenu getMenuChoice(){
@@ -76,23 +81,28 @@ public class MainMenu implements ExecutesMenu {
 		return MainMenuChoices.values()[menuChoice-1].nextMenu; 
 	}
 
-	private void storeAllAvailableTeams() {
-		new TeamStorage().storeAllTeamsInFile(listOfAvailableTeams);
+	private void saveAllStorableLists() {
+		int index=0;
+		for(StorageObject storageObject: StorageObject.values()){
+			new StorageAndRetrieval(
+					storageObject).storeObjectsInFile(listOfStorableLists.get(index++));
+		}
 	}
 
-	public static ArrayList<Team> getListOfAvailableTeams() {
-        ArrayList<Team> copyOfListOfAvailableTeams = new ArrayList<>();
-        for(Team team: MainMenu.listOfAvailableTeams){
-            copyOfListOfAvailableTeams.add(new Team(team));
-        }
-        return copyOfListOfAvailableTeams;
+	public static ArrayList<Storable> getListOfStorableObjects(StorageObject storableObject) {
+		ArrayList<Storable> copyOfListOfStorableObjects = new ArrayList<>();
+		for(Storable storable: listOfStorableLists.get(storableObject.ordinal())){
+			copyOfListOfStorableObjects.add(storable.deepCopy());
+		}
+		return copyOfListOfStorableObjects;
 	}
 
-	public static void setListOfAvailableTeams(ArrayList<Team> listOfAvailableTeams) {
-	       MainMenu.listOfAvailableTeams.clear();
-	        for(Team team:listOfAvailableTeams){
-	            MainMenu.listOfAvailableTeams.add(new Team(team));
-	        }
-	    }
+	public static void setListOfStorableObjects(StorageObject storableObject,
+										List<Storable> listOfStorableObjects) {
+		listOfStorableLists.get(storableObject.ordinal()).clear();
+		for(Storable storable:listOfStorableObjects){
+			listOfStorableLists.get(storableObject.ordinal()).add(storable.deepCopy());
+		}
+	}
 }
 

@@ -1,12 +1,15 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import view.Input;
 import module.Player;
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 
 public class ModifyPlayerOnTeamMenu implements ExecutesMenu {
-	private ArrayList<Team> copyOfListOfAvailableTeams;
+	private List<Storable> copyOfListOfAvailableTeams;
 	private Team teamToModify;
 	private int teamToModifyIndex;
 	private Player playerToModify;
@@ -26,11 +29,11 @@ public class ModifyPlayerOnTeamMenu implements ExecutesMenu {
 	}
 
 	private void retrieveAvailableTeams() {
-		copyOfListOfAvailableTeams = MainMenu.getListOfAvailableTeams();
+		copyOfListOfAvailableTeams = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 	}
 
 	private void getTeamToModify() {
-		teamToModify =  copyOfListOfAvailableTeams.get(teamToModifyIndex);
+		teamToModify =  (Team) copyOfListOfAvailableTeams.get(teamToModifyIndex);
 	}
 
 	private void getPlayerToModify() {
@@ -52,7 +55,7 @@ public class ModifyPlayerOnTeamMenu implements ExecutesMenu {
 	}
 
 	private void saveAvailableTeams() {
-		MainMenu.setListOfAvailableTeams(copyOfListOfAvailableTeams);
+		MainMenu.setListOfStorableObjects(StorageObject.TEAM, copyOfListOfAvailableTeams);
 	}
 
 	public boolean equals(Object o){

@@ -2,13 +2,16 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import view.Input;
 import module.Player;
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 
 public class ModifyTeamBattingOrderMenu implements ExecutesMenu {
-	private ArrayList<Team> copyOfListOfAvailableTeams;
+	private List<Storable> copyOfListOfAvailableTeams;
 	private int teamToModifyIndex;
 	private Team teamToModify;
 	
@@ -25,11 +28,11 @@ public class ModifyTeamBattingOrderMenu implements ExecutesMenu {
 	}
 	
 	private void retrieveAvailableTeams() {
-		copyOfListOfAvailableTeams = MainMenu.getListOfAvailableTeams();
+		copyOfListOfAvailableTeams = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 	}
 
 	private void getTeamToModify() {
-		teamToModify =  copyOfListOfAvailableTeams.get(teamToModifyIndex);
+		teamToModify =  (Team) copyOfListOfAvailableTeams.get(teamToModifyIndex);
 	}
 
 	private void modifyBattingOrder() {
@@ -53,13 +56,13 @@ public class ModifyTeamBattingOrderMenu implements ExecutesMenu {
 	}
 
 	private void movePlayerToNewLocation(int indexOfPlayerToMove, int indexOfWhereToMovePlayerTo) {
-		ArrayList<Player> localCopyOfTeam = teamToModify.getTeam();
+		ArrayList<Player> localCopyOfTeamPlayers = teamToModify.getPlayers();
 		if(indexOfWhereToMovePlayerTo>indexOfPlayerToMove){
-			Collections.rotate(localCopyOfTeam.subList(indexOfPlayerToMove, indexOfWhereToMovePlayerTo+1), -1);
+			Collections.rotate(localCopyOfTeamPlayers.subList(indexOfPlayerToMove, indexOfWhereToMovePlayerTo+1), -1);
 		}else{
-			Collections.rotate(localCopyOfTeam.subList(indexOfWhereToMovePlayerTo, indexOfPlayerToMove+1), 1);
+			Collections.rotate(localCopyOfTeamPlayers.subList(indexOfWhereToMovePlayerTo, indexOfPlayerToMove+1), 1);
 		}
-		teamToModify.setTeam(localCopyOfTeam);
+		teamToModify.setPlayers(localCopyOfTeamPlayers);
 	}
 
 	private boolean userWantsToMoveAnotherPlayer() {
@@ -67,7 +70,7 @@ public class ModifyTeamBattingOrderMenu implements ExecutesMenu {
 	}
 
 	private void saveAvailableTeams() {
-		MainMenu.setListOfAvailableTeams(copyOfListOfAvailableTeams);
+		MainMenu.setListOfStorableObjects(StorageObject.TEAM, copyOfListOfAvailableTeams);
 	}
 
 	public boolean equals(Object o){

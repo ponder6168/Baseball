@@ -1,5 +1,7 @@
 package controller;
 
+import module.Storable;
+import module.StorageObject;
 import module.Team;
 import view.Input;
 
@@ -8,17 +10,17 @@ public class ChooseATeamMenu  {
 	private int numberOfMenuChoices;
 
 
-	public ChooseATeamMenu() {
+	public ChooseATeamMenu(String prompt) {
 		//Add one for the QUIT option
-		this.numberOfMenuChoices = MainMenu.getListOfAvailableTeams().size()+1; 
+		this.numberOfMenuChoices = MainMenu.getListOfStorableObjects(StorageObject.TEAM).size()+1; 
 		StringBuilder menuMessage = new StringBuilder(System.lineSeparator()) ;
-		menuMessage.append("Enter the number of the team you want to choose.") ;
+		menuMessage.append(prompt) ;
 		menuMessage.append(System.lineSeparator()).append(System.lineSeparator());
 
 		int lineNumberOfCurrentMenuOption=1;
-		for(Team team: MainMenu.getListOfAvailableTeams()){
+		for(Storable team:  MainMenu.getListOfStorableObjects(StorageObject.TEAM)){
 			menuMessage.append(lineNumberOfCurrentMenuOption++).append(".  ")
-						.append(team.getDescription()).append(System.lineSeparator());
+						.append(((Team) team).getDescription()).append(System.lineSeparator());
 		}
 		menuMessage.append(lineNumberOfCurrentMenuOption).append(".  Return to Previous Menu.")
 					.append(System.lineSeparator());
@@ -39,7 +41,8 @@ public class ChooseATeamMenu  {
 		if(userChoseToQuit(userTeamChoiceFromMenu)){
 			return false;
 		}
-		String chosenTeam= MainMenu.getListOfAvailableTeams().get(userTeamChoiceFromMenu).toString();
+		String chosenTeam= MainMenu.getListOfStorableObjects(
+								StorageObject.TEAM).get(userTeamChoiceFromMenu).toString();
 		System.out.print(chosenTeam);
 		return isThisTheWrongTeam();
 	}

@@ -3,6 +3,7 @@ view/TempInput.java
 view/TempTest.java
 controller/TempTestChooseATeamMenu.java
 module/TempCreateTeams.java
+module/Temp.java
 
 # Compiled source #
 ###################

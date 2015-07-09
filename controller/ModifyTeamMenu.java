@@ -1,5 +1,7 @@
 package controller;
 
+import module.StorageObject;
+import module.Team;
 import view.Input;
 
 public class ModifyTeamMenu implements ExecutesMenu {
@@ -79,12 +81,13 @@ public class ModifyTeamMenu implements ExecutesMenu {
 
 	@Override
 	public void executeMenuChoice() {
-		setTeamToModifyIndex();
+		setTeamToModifyIndexConsole();
 		modifyTeam();
 	}
 
-	private void setTeamToModifyIndex() {
-		teamToModifyIndex = new ChooseATeamMenu().getIndexOfChosenTeam();
+	private void setTeamToModifyIndexConsole() {
+		teamToModifyIndex = new ChooseATeamMenu(
+				"Choose the team you wish to modify.").getIndexOfChosenTeam();
 	}
 
 	public void modifyTeam() {
@@ -98,13 +101,13 @@ public class ModifyTeamMenu implements ExecutesMenu {
 
 	private void displayTeamToModify() {
 		if(userDidNotChooseQuit()){
-			MainMenu.getListOfAvailableTeams().get(teamToModifyIndex).
+			((Team) MainMenu.getListOfStorableObjects(StorageObject.TEAM).get(teamToModifyIndex)).
 	         displayTeamWithMessage("Here is the team you are modifying");
 		}
 	}
 
 	private boolean userDidNotChooseQuit() {
-		return teamToModifyIndex < MainMenu.getListOfAvailableTeams().size();
+		return teamToModifyIndex < MainMenu.getListOfStorableObjects(StorageObject.TEAM).size();
 	}
 
 	public ExecutesMenu getMenuChoice(){

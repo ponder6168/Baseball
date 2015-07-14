@@ -59,22 +59,24 @@ public class SingleTeamSimulationResults implements Serializable, Storable{
 		string.append("The runs per game for this simulation was ")
 				.append(runsPerGame).append(System.lineSeparator())
 									.append(System.lineSeparator());
-		string.append("Runs Scored in a Game Distribution")
+		string.append(System.lineSeparator())
+				.append(buildHistogram());
+		return string.toString();
+	}
+	
+	public void displayRunsPerGameDistribution(){
+		StringBuilder string = new StringBuilder("Runs Scored in a Game Distribution")
 									.append(System.lineSeparator())
 									.append(System.lineSeparator());
 		string.append(String.format("%15s%20s", "Runs", "Times Runs"))
-									.append(System.lineSeparator());
+				.append(System.lineSeparator());
 		string.append(String.format("%15s%20s", "Scored", "Scored"))
-									.append(System.lineSeparator());
-		
+				.append(System.lineSeparator());
 		int runsScored=0;
 		for(int timesScored:runsPerGameDistribution){
 			string.append(String.format("%15d%20d", runsScored++,timesScored))
 			.append(System.lineSeparator());
 		}
-		string.append(System.lineSeparator())
-				.append(buildHistogram());
-		return string.toString();
 	}
 
 	public String getSimulationDescription() {

@@ -1,12 +1,13 @@
 package controller;
 
 import java.util.List;
+
 import module.Storable;
 import module.StorageObject;
 import module.Team;
 
 public class CreateTeamFromScratchMenu implements ExecutesMenu {
-	private List<Storable> tempListOfTeamsAvailable;
+	private List<Storable> teamsAvailable;
 	private Team newTeam;
 	
 	@Override
@@ -14,10 +15,20 @@ public class CreateTeamFromScratchMenu implements ExecutesMenu {
 			retriveAvailableTeams();
 			createNewTeam();
 			displayNewTeam();
-			saveAvailableTeams();
 			modifyNewTeam();
+			saveNewTeam();
+			saveAvailableTeams();
 		}
 
+		private void retriveAvailableTeams() {
+			teamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
+		}
+
+		private void createNewTeam() {
+			newTeam = new Team();
+			newTeam.createTeamFromTheConsole();
+		}
+		
 		private void displayNewTeam() {
 			System.out.format("%n%s%n%s%n%n%s%n%n",
 					"Here is the team you just created.",
@@ -27,22 +38,16 @@ public class CreateTeamFromScratchMenu implements ExecutesMenu {
 
 		private void modifyNewTeam() {
 			ModifyTeamMenu modifyTeam = new ModifyTeamMenu();
-			modifyTeam.setTeamToModifyIndex(
-					MainMenu.getListOfStorableObjects(StorageObject.TEAM).size()-1);
+			modifyTeam.setTeamToModify(newTeam);
 			modifyTeam.modifyTeam();
+			newTeam = modifyTeam.getModifiedTeam();
 	}
 
-		private void retriveAvailableTeams() {
-			tempListOfTeamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
+			private void saveNewTeam() {
+				teamsAvailable.add(newTeam);			
 		}
 
-		private void createNewTeam() {
-			newTeam = new Team();
-			newTeam.createTeamFromTheConsole();
-			tempListOfTeamsAvailable.add(newTeam);			
-		}
-		
 		private void saveAvailableTeams() {
-			MainMenu.setListOfStorableObjects(StorageObject.TEAM, tempListOfTeamsAvailable);
+			MainMenu.setListOfStorableObjects(StorageObject.TEAM, teamsAvailable);
 		}
 }

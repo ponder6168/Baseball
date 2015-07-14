@@ -13,12 +13,12 @@ import module.Storable;
 import module.StorageObject;
 import module.Team;
 
-public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
-	private List<Storable> copyOfAvailableTeams;
-	private List<Storable> copyOfSingleTeamIncrementPlayerResults;
+public class SingleIncrementPlayerSimulation  implements Simulatable {
+
+
+	private List<Storable> singleTeamIncrementPlayerResults;
 	private List<SingleTeamSimulationResults> listOfSimulationResults = new ArrayList<>();
-	int teamToPlayIndex;
-	private Team teamToPlay;
+	private Team teamToSimulate;
 	private SingleTeamIncrementPlayerStatResults simulationResults 
 							= new SingleTeamIncrementPlayerStatResults();
 	private Player playerToIncrement;
@@ -27,20 +27,12 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 	private int statIncrement;
 	private int numberOfIncrements;
 	
-	
 	@Override
-	public void executeMenuChoice() {
-		loadAllAvailableTeams();
+	public void runSimulation (Team team) {
+		teamToSimulate = team;
 		loadPreviousSimulations();
-		getTeamToPlay();
-		while(userDidNotChooseQuit()){
-			modifyTeamToPlay();
-			runSimulationsWithIncrements();
-			getTeamToPlay();
-		};
-		saveAllAvailableTeams();
+		runSimulationsWithIncrements();
 	}
-
 
 	private void runSimulationsWithIncrements() {
 		do{
@@ -52,7 +44,7 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 	}
 
 	private void initializeSimulationValues() {
-		playerToIncrement = teamToPlay.getPlayerFromConsole(
+		playerToIncrement = teamToSimulate.getPlayerFromConsole(
 				"Choose the player whose stat you want to increment.");
 		getPlayerStatToModify();
 		setInitialStatValue();
@@ -83,8 +75,8 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 		int nextStatValue = initialStatValue;
 		for(int i=0 ; i<numberOfIncrements ; i++){
 			SingleTeamSimulationResults result = 
-					new SingleTeamSimulation().playMultipleGames(teamToPlay);
-			result.setTeam(teamToPlay);
+					new SingleTeamSimulation().playMultipleGames(teamToSimulate);
+			result.setTeam(teamToSimulate);
 			listOfSimulationResults.add(result);
 			nextStatValue += statIncrement;
 			playerToIncrement.setStatWithValue(statToModify, nextStatValue);
@@ -93,61 +85,15 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 		simulationResults.setIndividualSimulationResults(listOfSimulationResults);
 	}
 
-
 	private boolean userWantsToRunAnotherSimulation() {
 		return Input.getYesOrNoFromTheUser(
 				"Do you want to run another simulation with this team? (y/n)").equals("y");
 	}
 
-	private void loadAllAvailableTeams() {
-		copyOfAvailableTeams = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
-	}
-
 	private void loadPreviousSimulations() {
-		copyOfSingleTeamIncrementPlayerResults =
+		singleTeamIncrementPlayerResults =
 				MainMenu.getListOfStorableObjects(StorageObject.SINGLE_TEAM_SIMULATION_MULTIPLE_ROUNDS);
 	}
-
-	private void getTeamToPlay() {
-		teamToPlayIndex = new ChooseATeamMenu(
-								"Choose the team you wish to use for the simulation"+
-								" or Return to Previous Menu.").getIndexOfChosenTeam();
-		if(userDidNotChooseQuit()){
-			teamToPlay = (Team) copyOfAvailableTeams.get(teamToPlayIndex);
-		}
-	}
-
-	private boolean userDidNotChooseQuit() {
-		return teamToPlayIndex < copyOfAvailableTeams.size();
-	}
-
-	private void modifyTeamToPlay() {
-		if(userWantsToModifyTeam()){
-			ModifyTeamMenu modifyTeam = new ModifyTeamMenu();
-			modifyTeam.setTeamToModifyIndex(teamToPlayIndex);
-			modifyTeam.modifyTeam();
-		}
-		setStealsOnOrOff();
-	}
-
-	private boolean userWantsToModifyTeam() {
-		return Input.getYesOrNoFromTheUser(
-					"Do you want to modify the team before you play? (y/n)").equals("y");
-	}
-
-	private void setStealsOnOrOff() {
-		if(userChoosesToAllowSteals()){
-			teamToPlay.setCanSteal(true);
-		}else{
-			teamToPlay.setCanSteal(false);
-		}
-	}
-
-	private boolean userChoosesToAllowSteals() {
-		return 	Input.getYesOrNoFromTheUser(
-					"Do you wish to allow steals? (y/n)").equals("y");
-	}
-
 
 	private void displaySimulationResults() {
 		System.out.print(simulationResults);
@@ -156,10 +102,10 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 	private void saveSingleTeamIncrementPlayerStatResults() {
 		if(userWantsToSaveResults()){
 			setSimulationDescription();
-			copyOfSingleTeamIncrementPlayerResults.add(simulationResults);
+			singleTeamIncrementPlayerResults.add(simulationResults);
 			MainMenu.setListOfStorableObjects(
 					StorageObject.SINGLE_TEAM_SIMULATION_MULTIPLE_ROUNDS, 
-					copyOfSingleTeamIncrementPlayerResults);
+					singleTeamIncrementPlayerResults);
 		}
 	}
 
@@ -172,9 +118,4 @@ public class PlaySingleTeamIncrementPlayerStatMenu implements ExecutesMenu {
 		simulationResults.setSimulationDescription(
 				Input.getLineOfUserInput("Enter your description of the simulation. "));
 	}
-
-	private void saveAllAvailableTeams() {
-		MainMenu.setListOfStorableObjects(StorageObject.TEAM, copyOfAvailableTeams);
-	}
-
 }

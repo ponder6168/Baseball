@@ -5,31 +5,45 @@ import view.Input;
 public class SingleTeamMenu implements ExecutesMenu {
 
 	enum SingleTeamMenuChoices {
-		NO_CHANGES (". Play a team with no changes.",
-								new PlaySingleTeamOneRoundMenu()),
-		INCREMENT_ONE_PLAYERS_STAT	(". Play a team and increment one player's stat.",
-									new PlaySingleTeamIncrementPlayerStatMenu()),
-		INCREMENT_ONE_TEAM_STAT	(". Play a team and increment one stat for the team.",
-											new PlaySingleTeamIncrementTeamStat()),
-		ROTATE_PLAYER_IN_BATTING_ORDER	(". Play a team and rotate one player through the batting order.",
-													new PlaySingleTeamRotatePlayerInBattingOrder()),
-		QUIT	(". Return to Main Menu.",
-					new QuitMenu());
+		NO_CHANGES (". Play a team with no changes."){
+			public SingleTeamSimulator getSimulator(){
+				return new SingleTeamSimulator(new SingleNoChangeSimulation());
+			}
+		},
+		INCREMENT_ONE_PLAYERS_STAT	(". Play a team and increment one player's stat."){
+			public SingleTeamSimulator getSimulator(){
+				return new SingleTeamSimulator(new SingleIncrementPlayerSimulation());
+			}
+		},
+		INCREMENT_ONE_TEAM_STAT	(". Play a team and increment one stat for the team."){
+			public SingleTeamSimulator getSimulator(){
+				return new SingleTeamSimulator(new SingleIncrementTeamSimulation());
+			}
+		},
+		ROTATE_PLAYER_IN_BATTING_ORDER	(". Play a team and rotate one player through the batting order."){
+			public SingleTeamSimulator getSimulator(){
+				return new SingleTeamSimulator(new SingleRotatePlayerInBattingOrderSimulation());
+			}
+		},
+		QUIT	(". Return to Main Menu."){
+			public SingleTeamSimulator getSimulator(){
+				return new SingleTeamSimulator(new QuitSimulation());
+			}
+		};
 
 
 		private String promptMessage;
-		private ExecutesMenu nextMenu;
 
-		private SingleTeamMenuChoices(String promptMessage,
-										ExecutesMenu nextMenu) {
+		private SingleTeamMenuChoices(String promptMessage) {
 			this.promptMessage=promptMessage;
-			this.nextMenu = nextMenu;
 		}
 
 		@Override
 		public String toString(){
 			return this.promptMessage;
 		}
+		
+		abstract public SingleTeamSimulator getSimulator();
 	}
 
 	private int menuChoice;
@@ -62,15 +76,22 @@ public class SingleTeamMenu implements ExecutesMenu {
 		ExecutesMenu newMenu;
 		do{
 			newMenu = getMenuChoice();
-			newMenu.executeMenuChoice();			
+			executeIfUserDidNotChooseQuit(newMenu);
 		}while(!newMenu.equals("QUIT"));
 
 	}
 	
+	private void executeIfUserDidNotChooseQuit(ExecutesMenu menu) {
+		if(!menu.equals("QUIT")){
+			menu.executeMenuChoice();			
+		}
+		
+	}
+
 	private ExecutesMenu getMenuChoice(){
 		menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices,this.menuDisplay);
 		//Subtract 1 to convert user input to zero based index
-		return SingleTeamMenuChoices.values()[menuChoice-1].nextMenu; 
+		return SingleTeamMenuChoices.values()[menuChoice-1].getSimulator(); 
 	}
 
 	public boolean equals(Object o){

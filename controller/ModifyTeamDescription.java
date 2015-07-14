@@ -1,37 +1,18 @@
 package controller;
 
-import java.util.List;
-
-import module.Storable;
-import module.StorageObject;
 import module.Team;
 import view.Input;
 
-public class ModifyTeamDescriptionMenu implements ExecutesMenu {
-	private List<Storable> copyOfListOfAvailableTeams;
+public class ModifyTeamDescription implements TeamModifier {
 	private Team teamToModify;
-	private int teamToModifyIndex;
 	
-	public ModifyTeamDescriptionMenu(int teamToModifyIndex) {
-		this.teamToModifyIndex = teamToModifyIndex;
-	}
-
 	@Override
-	public void executeMenuChoice() {
-		retrieveAvailableTeams();
-		getTeamToModify();
+	public Team getModifiedTeam(Team teamToModify) {
+		this.teamToModify = teamToModify;
 		setDescriptionOfTeamToModify(getNewTeamDescription());
-		saveAvailableTeams();
+		return this.teamToModify;
 	}
-
-	private void retrieveAvailableTeams() {
-		copyOfListOfAvailableTeams = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
-	}
-
-	private void getTeamToModify() {
-		teamToModify =  (Team) copyOfListOfAvailableTeams.get(teamToModifyIndex);
-	}
-
+	
 	private void setDescriptionOfTeamToModify(String newTeamDescription) {
 		this.teamToModify.setDescription(newTeamDescription);
 	}
@@ -51,11 +32,8 @@ public class ModifyTeamDescriptionMenu implements ExecutesMenu {
 		return Input.getYesOrNoFromTheUser("Is this the description you want? (Y/N)").equals("n");
 	}
 
-	private void saveAvailableTeams() {
-		MainMenu.setListOfStorableObjects(StorageObject.TEAM, copyOfListOfAvailableTeams);
-	}
-
 	public boolean equals(Object o){
 		return o.equals("MODIFY_DESCRIPTION");
 	}
+
 }

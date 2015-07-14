@@ -2,6 +2,7 @@ package module;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import module.Player.PlayerStats;
 import view.Input;
@@ -284,12 +285,13 @@ public class Team implements Serializable, Storable {
 		return  this.players.get(positionOfPlayerInBattingOrder);
 	}
 	
+	
 	public Player getPlayerFromConsole(String prompt) {
 		Player player;
 		do{
 			System.out.print(this);
 			int chosenPlayer = Input.getIntegerFromMinToMax
-					(1, Team.NUMBER_OF_PLAYERS_ON_TEAM,prompt);
+									(1, Team.NUMBER_OF_PLAYERS_ON_TEAM,prompt);
 			player = this.getPlayer(chosenPlayer-1);
 		}while(!correctPlayerIsChosen(player));
 		return  player;
@@ -345,6 +347,35 @@ public class Team implements Serializable, Storable {
 
 	private PlayerStats getPlayerStatToChange(int usersChoice) {
 		return PlayerStats.values()[usersChoice];
+	}
+
+	public void modifyBattingOrder() {
+		displayTeamWithMessage("Here is the current batting order.");
+		do{
+			// Subtract 1 to adjust for 0 based index
+			int indexOfPlayerToMove = 
+					Input.getIntegerFromMinToMax(1, 
+							Team.NUMBER_OF_PLAYERS_ON_TEAM,
+							"Enter the player you want to move.")-1; 
+			int indexOfWhereToMovePlayerTo = 
+					Input.getIntegerFromMinToMax(1, 
+							Team.NUMBER_OF_PLAYERS_ON_TEAM,
+							"Enter where you want to move the player to.")-1;
+			movePlayerToNewLocation(indexOfPlayerToMove,indexOfWhereToMovePlayerTo);
+			displayTeamWithMessage("Here is the updated batting order.");
+		}while(userWantsToMoveAnotherPlayer());
+	}
+
+	private void movePlayerToNewLocation(int indexOfPlayerToMove, int indexOfWhereToMovePlayerTo) {
+		if(indexOfWhereToMovePlayerTo>indexOfPlayerToMove){
+			Collections.rotate(players.subList(indexOfPlayerToMove, indexOfWhereToMovePlayerTo+1), -1);
+		}else{
+			Collections.rotate(players.subList(indexOfWhereToMovePlayerTo, indexOfPlayerToMove+1), 1);
+		}
+	}
+
+	private boolean userWantsToMoveAnotherPlayer() {
+		return Input.getYesOrNoFromTheUser("Do you want to move another player? (y/n)").equals("y");
 	}
 
 

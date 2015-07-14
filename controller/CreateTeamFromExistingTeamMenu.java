@@ -9,43 +9,49 @@ import module.Team;
 public class CreateTeamFromExistingTeamMenu implements ExecutesMenu {
 
 	private int teamToModifyIndex;
-	private List<Storable> tempListOfTeamsAvailable;
+	private List<Storable> teamsAvailable;
+	private Team teamToStartWith;
 	
 	@Override
 	public void executeMenuChoice() {
 		retriveAvailableTeams();
 		createNewTeam();
-		saveAvailableTeams();
 		modifyNewTeam();
+		saveNewTeam();
+		saveAvailableTeams();
 	}
 
 	private void retriveAvailableTeams() {
-		tempListOfTeamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
+		teamsAvailable = MainMenu.getListOfStorableObjects(StorageObject.TEAM);
 	}
 
 	private void createNewTeam() {
 		teamToModifyIndex = new ChooseATeamMenu(
-				"Choose the team you wish to use to copy and modify.")
-					.getIndexOfChosenTeam();
+									"Choose the team you wish to use to copy and modify.")
+									.getIndexOfChosenTeam();
 		if(userDidNotChooseQuit()){
-			Team teamToStartWith = (Team) tempListOfTeamsAvailable.get(teamToModifyIndex);
-			tempListOfTeamsAvailable.add(new Team(teamToStartWith));			
+			teamToStartWith = (Team) teamsAvailable.get(teamToModifyIndex);
 		}
 	}
 
 	private boolean userDidNotChooseQuit() {
-		return teamToModifyIndex < tempListOfTeamsAvailable.size();
-	}
-
-	private void saveAvailableTeams() {
-		MainMenu.setListOfStorableObjects(StorageObject.TEAM, tempListOfTeamsAvailable);
+		return teamToModifyIndex < teamsAvailable.size();
 	}
 
 	private void modifyNewTeam() {
 		if(userDidNotChooseQuit()){
 			ModifyTeamMenu modifyTeam = new ModifyTeamMenu();
-			modifyTeam.setTeamToModifyIndex(tempListOfTeamsAvailable.size()-1);
+			modifyTeam.setTeamToModify(teamToStartWith);
 			modifyTeam.modifyTeam();
+			teamToStartWith = modifyTeam.getModifiedTeam();
 		}
+	}
+	
+	private void saveNewTeam() {
+		teamsAvailable.add(new Team(teamToStartWith));			
+	}
+
+	private void saveAvailableTeams() {
+		MainMenu.setListOfStorableObjects(StorageObject.TEAM, teamsAvailable);
 	}
 }

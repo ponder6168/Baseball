@@ -2,9 +2,9 @@ package module;
 
 import java.io.Serializable;
 
-public class SingleTeamSimulationResults implements Serializable, Storable{
-	private static final long serialVersionUID = -6440461314501385144L;
-	
+public class SingleTeamOneRoundResult implements Serializable, Storable{
+	private static final long serialVersionUID = -9170709552774432402L;
+
 	public static final int  MAX_RUNS_PER_INNING_RECORDED = 12;
 	private String simulationDescription="Default descripton.";
 	private Team team;
@@ -17,12 +17,12 @@ public class SingleTeamSimulationResults implements Serializable, Storable{
 	private double distributionDisplayInterval = SingleTeamSimulation.getIterations()/
 													distributionDisplayMaxWidth;
 	
-	public SingleTeamSimulationResults(){
+	public SingleTeamOneRoundResult(){
 		super();
 	}
 	
-	public SingleTeamSimulationResults(SingleTeamSimulationResults simulationResults){
-		this.simulationDescription = simulationResults.getSimulationDescription();
+	public SingleTeamOneRoundResult(SingleTeamOneRoundResult simulationResults){
+		this.simulationDescription = simulationResults.getDescription();
 		this.team = simulationResults.getTeam();
 		this.totalRunsScored = simulationResults.getTotalRunsScored();
 		this.runsPerGame = simulationResults.getRunsPerGame();
@@ -31,7 +31,7 @@ public class SingleTeamSimulationResults implements Serializable, Storable{
 	
 	@Override
 	public Storable deepCopy() {
-		return new SingleTeamSimulationResults(this);
+		return new SingleTeamOneRoundResult(this);
 	}
 
 	
@@ -79,11 +79,12 @@ public class SingleTeamSimulationResults implements Serializable, Storable{
 		}
 	}
 
-	public String getSimulationDescription() {
+	@Override
+	public String getDescription() {
 		return simulationDescription;
 	}
 
-	public void setSimulationDescription(String simulationDescription) {
+	public void setDescription(String simulationDescription) {
 		this.simulationDescription = simulationDescription;
 	}
 

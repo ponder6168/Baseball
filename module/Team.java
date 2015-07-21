@@ -44,6 +44,18 @@ public class Team implements Serializable, Storable {
 		}
 	}
 	
+	//Create team of test players for JUnit Testing
+	public Team(TestPlayer player){
+		this.players=new ArrayList<Player>();
+		for(int i=0; i<NUMBER_OF_PLAYERS_ON_TEAM ; i++){
+			this.players.add(player);
+		}
+		this.currentBatter=0; //The leadoff hitter has an index of 0.
+		this.description="Default Team";
+		this.playersCanSteal = true;
+	}
+
+	
 	@Override
 	public Storable deepCopy() {
 		return new Team(this);
@@ -335,9 +347,13 @@ public class Team implements Serializable, Storable {
 		if(userWantsToChangeAnotherStat(usersChoice)){
 			int statValue = Input.getIntegerFromMinToMax(0, Integer.MAX_VALUE, "Enter the new value.");
 			PlayerStats statToChange = getPlayerStatToChange(usersChoice); 
-			for(Player player:players){
-				player.setStatWithValue(statToChange, statValue);
-			}
+			setTeamStat(statToChange, statValue);
+		}
+	}
+	
+	public void setTeamStat(PlayerStats statToChange, int statValue){
+		for(Player player:players){
+			player.setStatWithValue(statToChange, statValue);
 		}
 	}
 

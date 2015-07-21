@@ -14,6 +14,7 @@ public class MainMenu implements ExecutesMenu {
 		TWO_TEAM_SENARIO(".  Run a Two Team Senario.", new TwoTeamMenu()), 
 		MODIFY_TEAM(".  Modify an Existing Team.", new ModifyTeamMenu()), 
 		CREATE_TEAM(".  Create a new Team.", new CreateTeamMenu()), 
+		EXAMINE_PREVIOUS_SIMULATIONS(".  Examine previous simulatons.", new PreviousSimulationsMenu()), 
 		QUIT(".  Exit the program.", new QuitMenu());
 
 		private String promptMessage;

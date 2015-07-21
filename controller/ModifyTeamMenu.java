@@ -115,7 +115,7 @@ public class ModifyTeamMenu implements ExecutesMenu {
 		}
 	}
 
-	public TeamModifier getMenuChoice(){
+	private TeamModifier getMenuChoice(){
 		if(userDidNotChooseQuit()){
 			menuChoice = Input.getIntegerFromMinToMax(1, numberOfMenuChoices,menuDisplay);
 			//Subtract 1 to convert user input to zero based index

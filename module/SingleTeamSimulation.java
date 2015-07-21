@@ -2,7 +2,7 @@ package module;
 
 
 
-import module.SingleTeamSimulationResults;
+import module.SingleTeamOneRoundResult;
 import module.Team;
 
 
@@ -20,8 +20,8 @@ public class SingleTeamSimulation {
 		SingleTeamSimulation.iterations = iterations;
 	}
 
-	public SingleTeamSimulationResults playMultipleGames(Team team){
-		SingleTeamSimulationResults runningTotalOfGameResults = new SingleTeamSimulationResults();
+	public SingleTeamOneRoundResult playMultipleGames(Team team){
+		SingleTeamOneRoundResult runningTotalOfGameResults = new SingleTeamOneRoundResult();
 		for(int i=0;i<iterations;i++){
 			int runsFromSingleGame = playSingleTeamSingleGame(team);
 			runningTotalOfGameResults = addSingleGameToRunningTotal(runningTotalOfGameResults,runsFromSingleGame);
@@ -44,8 +44,8 @@ public class SingleTeamSimulation {
 	}
 	
 
-	private SingleTeamSimulationResults addSingleGameToRunningTotal
-		(SingleTeamSimulationResults runningTotalOfGameResults,
+	private SingleTeamOneRoundResult addSingleGameToRunningTotal
+		(SingleTeamOneRoundResult runningTotalOfGameResults,
 			int runsFromSingleGame) {
 		int runningTotalOfRunsScored = runningTotalOfGameResults.getTotalRunsScored()+runsFromSingleGame;
 		runningTotalOfGameResults.setTotalRunsScored(runningTotalOfRunsScored);
@@ -59,8 +59,8 @@ public class SingleTeamSimulation {
 
 	private int[] updateRunningRunsPerGameDistribution(
 			int[] runningRunsPerGameDistribution, int runsFromSingleGame) {
-			if (runsFromSingleGame>=SingleTeamSimulationResults.MAX_RUNS_PER_INNING_RECORDED)
-				runningRunsPerGameDistribution[SingleTeamSimulationResults.MAX_RUNS_PER_INNING_RECORDED]++;
+			if (runsFromSingleGame>=SingleTeamOneRoundResult.MAX_RUNS_PER_INNING_RECORDED)
+				runningRunsPerGameDistribution[SingleTeamOneRoundResult.MAX_RUNS_PER_INNING_RECORDED]++;
 			else
 				runningRunsPerGameDistribution[runsFromSingleGame]++;
 		return runningRunsPerGameDistribution;

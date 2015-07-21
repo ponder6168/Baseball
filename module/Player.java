@@ -356,7 +356,7 @@ public class Player implements Serializable{
 
 	public void setPercentageStolenBases(int percentageSuccessfullStolenBases){
 		this.stolenBases = percentageSuccessfullStolenBases;
-		this.caughtStealing = 100;
+		this.caughtStealing = 100-percentageSuccessfullStolenBases;
 	}
 	
 	public int getPlateAppearances() {

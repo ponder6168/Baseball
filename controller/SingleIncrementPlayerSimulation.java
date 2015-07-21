@@ -6,21 +6,19 @@ import java.util.List;
 import module.Player.PlayerStats;
 import view.Input;
 import module.Player;
-import module.SingleTeamIncrementPlayerStatResults;
+import module.SingleTeamMultipleRoundResult;
 import module.SingleTeamSimulation;
-import module.SingleTeamSimulationResults;
+import module.SingleTeamOneRoundResult;
 import module.Storable;
 import module.StorageObject;
 import module.Team;
 
 public class SingleIncrementPlayerSimulation  implements Simulatable {
 
-
-	private List<Storable> singleTeamIncrementPlayerResults;
-	private List<SingleTeamSimulationResults> listOfSimulationResults = new ArrayList<>();
+	private List<Storable> singleTeamMultipleRoundSimulationResults;
 	private Team teamToSimulate;
-	private SingleTeamIncrementPlayerStatResults simulationResults 
-							= new SingleTeamIncrementPlayerStatResults();
+	private SingleTeamMultipleRoundResult simulationResult 
+							= new SingleTeamMultipleRoundResult();
 	private Player playerToIncrement;
 	private PlayerStats statToModify;
 	private int initialStatValue;
@@ -29,7 +27,7 @@ public class SingleIncrementPlayerSimulation  implements Simulatable {
 	
 	@Override
 	public void runSimulation (Team team) {
-		teamToSimulate = team;
+		teamToSimulate = new Team(team);
 		loadPreviousSimulations();
 		runSimulationsWithIncrements();
 	}
@@ -72,9 +70,10 @@ public class SingleIncrementPlayerSimulation  implements Simulatable {
 	}
 
 	private void runSimulations() {
+		List<SingleTeamOneRoundResult> listOfSimulationResults = new ArrayList<>();
 		int nextStatValue = initialStatValue;
 		for(int i=0 ; i<numberOfIncrements ; i++){
-			SingleTeamSimulationResults result = 
+			SingleTeamOneRoundResult result = 
 					new SingleTeamSimulation().playMultipleGames(teamToSimulate);
 			result.setTeam(teamToSimulate);
 			listOfSimulationResults.add(result);
@@ -82,7 +81,7 @@ public class SingleIncrementPlayerSimulation  implements Simulatable {
 			playerToIncrement.setStatWithValue(statToModify, nextStatValue);
 		}
 		playerToIncrement.setStatWithValue(statToModify, initialStatValue);
-		simulationResults.setIndividualSimulationResults(listOfSimulationResults);
+		simulationResult.setIndividualSimulationResults(listOfSimulationResults);
 	}
 
 	private boolean userWantsToRunAnotherSimulation() {
@@ -91,21 +90,21 @@ public class SingleIncrementPlayerSimulation  implements Simulatable {
 	}
 
 	private void loadPreviousSimulations() {
-		singleTeamIncrementPlayerResults =
+		singleTeamMultipleRoundSimulationResults =
 				MainMenu.getListOfStorableObjects(StorageObject.SINGLE_TEAM_SIMULATION_MULTIPLE_ROUNDS);
 	}
 
 	private void displaySimulationResults() {
-		System.out.print(simulationResults);
+		System.out.print(simulationResult);
 	}
 
 	private void saveSingleTeamIncrementPlayerStatResults() {
 		if(userWantsToSaveResults()){
 			setSimulationDescription();
-			singleTeamIncrementPlayerResults.add(simulationResults);
+			singleTeamMultipleRoundSimulationResults.add(simulationResult);
 			MainMenu.setListOfStorableObjects(
 					StorageObject.SINGLE_TEAM_SIMULATION_MULTIPLE_ROUNDS, 
-					singleTeamIncrementPlayerResults);
+					singleTeamMultipleRoundSimulationResults);
 		}
 	}
 
@@ -115,7 +114,7 @@ public class SingleIncrementPlayerSimulation  implements Simulatable {
 	}
 
 	private void setSimulationDescription() {
-		simulationResults.setSimulationDescription(
+		simulationResult.setSimulationDescription(
 				Input.getLineOfUserInput("Enter your description of the simulation. "));
 	}
 }

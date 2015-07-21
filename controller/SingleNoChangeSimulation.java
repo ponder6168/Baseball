@@ -4,7 +4,7 @@ import java.util.List;
 
 import view.Input;
 import module.SingleTeamSimulation;
-import module.SingleTeamSimulationResults;
+import module.SingleTeamOneRoundResult;
 import module.Storable;
 import module.StorageObject;
 import module.Team;
@@ -12,7 +12,7 @@ import module.Team;
 public class SingleNoChangeSimulation implements Simulatable {
 	private List<Storable> singleTeamSimulationResults;
 	Team teamToSimulate;
-	SingleTeamSimulationResults simulationResult;
+	SingleTeamOneRoundResult simulationResult;
 	
 	@Override
 	public void runSimulation(Team team) {
@@ -53,7 +53,7 @@ public class SingleNoChangeSimulation implements Simulatable {
 	}
 
 	private void setSimulationDescription() {
-		simulationResult.setSimulationDescription(
+		simulationResult.setDescription(
 				Input.getLineOfUserInput("Enter your description of the simulation. "));
 	}
 }
